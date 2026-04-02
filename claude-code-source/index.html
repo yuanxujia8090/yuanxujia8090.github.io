@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="claude-code 源码解读感谢 Anthropic 团队不小心暴露的claude-code 源码福利 大纲 整体架构、目录 核心模块 query stopHooks tokenBudget">
+    <meta name="description" content="Claude Code 源码深度分析报告 基于 1,332 个 TypeScript 文件的全面分析   引言Claude Code 是 Anthropic 推出的终端 AI 编程助手，使用 TypeScript 开发，Bun 作为运行时。本报告基于其开源泄露的完整源码，从整体架构、核心执行流程、核心模块、设计模式和工程实践五个维度进行深度分析，为学习和借鉴这一企业级 TypeScript 项目提">
 <meta property="og:type" content="website">
 <meta property="og:title" content="claude-code 源码解读">
 <meta property="og:url" content="https://yuanxujia8090.github.io/claude-code-source/index.html">
 <meta property="og:site_name" content="袁旭佳(Aaron)的博客">
-<meta property="og:description" content="claude-code 源码解读感谢 Anthropic 团队不小心暴露的claude-code 源码福利 大纲 整体架构、目录 核心模块 query stopHooks tokenBudget">
+<meta property="og:description" content="Claude Code 源码深度分析报告 基于 1,332 个 TypeScript 文件的全面分析   引言Claude Code 是 Anthropic 推出的终端 AI 编程助手，使用 TypeScript 开发，Bun 作为运行时。本报告基于其开源泄露的完整源码，从整体架构、核心执行流程、核心模块、设计模式和工程实践五个维度进行深度分析，为学习和借鉴这一企业级 TypeScript 项目提">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-03-31T17:09:27.000Z">
-<meta property="article:modified_time" content="2026-03-31T17:42:28.868Z">
+<meta property="article:modified_time" content="2026-04-02T01:41:03.333Z">
 <meta property="article:author" content="袁旭佳(Aaron)">
 <meta property="article:tag" content="claude code">
 <meta name="twitter:card" content="summary">
@@ -81,6 +81,8 @@
       <!--
      --><li><a href="/">Home</a></li><!--
    --><!--
+     --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+   --><!--
      --><li><a href="/about/">About</a></li><!--
    --><!--
      --><li><a href="/archives/">Writing</a></li><!--
@@ -95,16 +97,224 @@
 
   <div class="content" itemprop="articleBody">
       
-          <h1 id="claude-code-源码解读"><a href="#claude-code-源码解读" class="headerlink" title="claude-code 源码解读"></a>claude-code 源码解读</h1><p>感谢 Anthropic 团队不小心暴露的claude-code 源码福利</p>
-<h2 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h2><ul>
-<li>整体架构、目录</li>
-<li>核心模块<ul>
-<li>query</li>
-<li>stopHooks</li>
-<li>tokenBudget</li>
+          <h1 id="Claude-Code-源码深度分析报告"><a href="#Claude-Code-源码深度分析报告" class="headerlink" title="Claude Code 源码深度分析报告"></a>Claude Code 源码深度分析报告</h1><blockquote>
+<p>基于 1,332 个 TypeScript 文件的全面分析</p>
+</blockquote>
+<hr>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Claude Code 是 Anthropic 推出的终端 AI 编程助手，使用 TypeScript 开发，Bun 作为运行时。本报告基于其开源泄露的完整源码，从<strong>整体架构</strong>、<strong>核心执行流程</strong>、<strong>核心模块</strong>、<strong>设计模式</strong>和<strong>工程实践</strong>五个维度进行深度分析，为学习和借鉴这一企业级 TypeScript 项目提供参考。</p>
+<blockquote>
+<p><strong>说明</strong>：本文档基于公开泄露的源码进行分析，内容仅用于学习和研究目的。</p>
+</blockquote>
+<hr>
+<h2 id="一、整体架构分析"><a href="#一、整体架构分析" class="headerlink" title="一、整体架构分析"></a>一、整体架构分析</h2><h3 id="1-1-项目规模"><a href="#1-1-项目规模" class="headerlink" title="1.1 项目规模"></a>1.1 项目规模</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TypeScript 文件</td>
+<td>1,332 个</td>
+</tr>
+<tr>
+<td>核心模块代码行数</td>
+<td>6,766+ 行</td>
+</tr>
+<tr>
+<td>工具实现</td>
+<td>45+ 个</td>
+</tr>
+<tr>
+<td>CLI 命令</td>
+<td>100+ 个</td>
+</tr>
+<tr>
+<td>React 组件</td>
+<td>146 个</td>
+</tr>
+<tr>
+<td>React Hooks</td>
+<td>87+ 个</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-顶级目录结构"><a href="#1-2-顶级目录结构" class="headerlink" title="1.2 顶级目录结构"></a>1.2 顶级目录结构</h3><ul>
+<li><a href="/2026/04/01/claude-code-source-dir/index.html">源码目录结构</a></li>
 </ul>
-</li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">├── main.tsx              # 应用入口 (803KB)</span><br><span class="line">├── query.ts              # 查询引擎核心 (1,729 行)</span><br><span class="line">├── QueryEngine.ts        # 查询引擎类 (1,295 行)</span><br><span class="line">├── Tool.ts               # 工具基础定义 (792 行)</span><br><span class="line">├── commands.ts           # 命令注册表 (754 行)</span><br><span class="line">├── tools.ts              # 工具注册表 (389 行)</span><br><span class="line">├── setup.ts              # 会话初始化 (477 行)</span><br><span class="line">├── context.ts            # 上下文构建 (189 行)</span><br><span class="line">│</span><br><span class="line">├── tools/                # 45 个工具实现</span><br><span class="line">├── commands/             # 100+ CLI 命令</span><br><span class="line">├── services/             # 核心服务 (38 个子目录)</span><br><span class="line">├── hooks/                # React hooks (87+ 个)</span><br><span class="line">├── components/           # React UI 组件 (146 个)</span><br><span class="line">├── utils/                # 工具函数库 (330+ 个)</span><br><span class="line">├── ink/                  # 终端 UI 引擎 (50 个文件)</span><br><span class="line">├── bridge/               # 远程会话系统</span><br><span class="line">└── types/                # 类型定义</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-技术栈"><a href="#1-3-技术栈" class="headerlink" title="1.3 技术栈"></a>1.3 技术栈</h3><ul>
+<li><strong>运行时</strong>: Bun</li>
+<li><strong>语言</strong>: TypeScript</li>
+<li><strong>UI框架</strong>: React + Ink (终端 UI 库)</li>
+<li><strong>包管理</strong>: 无 package.json (源码提取目录)</li>
 </ul>
+<hr>
+<h2 id="二、核心执行流程（Agent-Loop）"><a href="#二、核心执行流程（Agent-Loop）" class="headerlink" title="二、核心执行流程（Agent Loop）"></a>二、核心执行流程（Agent Loop）</h2><h3 id="2-1-应用启动序列"><a href="#2-1-应用启动序列" class="headerlink" title="2.1 应用启动序列"></a>2.1 应用启动序列</h3><p>Claude Code 的启动流程设计精巧，充分利用了异步 I&#x2F;O 的并行性：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.tsx - 启动序列</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 第1阶段：性能关键点 - 并行预热</span></span><br><span class="line"><span class="title function_">profileCheckpoint</span>(<span class="string">&#x27;main_tsx_entry&#x27;</span>)</span><br><span class="line"><span class="title function_">startMdmRawRead</span>()              <span class="comment">// macOS MDM 读取</span></span><br><span class="line"><span class="title function_">startKeychainPrefetch</span>()        <span class="comment">// Keychain 读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 第2阶段：重型模块导入（借助上述并行预热）</span></span><br><span class="line"><span class="keyword">import</span> &#123; feature &#125; <span class="keyword">from</span> <span class="string">&#x27;bun:bundle&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Command</span>, ... &#125; <span class="keyword">from</span> <span class="string">&#x27;@commander-js/extra-typings&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 第3阶段：CLI 命令解析和初始化</span></span><br><span class="line"><span class="keyword">const</span> commands = <span class="title function_">getCommands</span>()  <span class="comment">// 从 commands.ts 加载</span></span><br><span class="line"><span class="keyword">await</span> <span class="title function_">init</span>(...)                 <span class="comment">// 初始化会话</span></span><br><span class="line"><span class="title function_">launchRepl</span>()                   <span class="comment">// 启动 REPL</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键设计</strong>：</p>
+<ul>
+<li>启动前缀优化：在主模块导入前启动 MDM&#x2F;Keychain 读取，利用 I&#x2F;O 等待时间</li>
+<li>特性开关：使用 <code>feature()</code> 从 <code>bun:bundle</code> 进行死代码消除</li>
+</ul>
+<h3 id="2-2-Agent-Loop-核心逻辑（query-ts）"><a href="#2-2-Agent-Loop-核心逻辑（query-ts）" class="headerlink" title="2.2 Agent Loop 核心逻辑（query.ts）"></a>2.2 Agent Loop 核心逻辑（query.ts）</h3><p>Claude Code 采用<strong>双层生成器架构</strong>实现流式处理：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// query.ts - 双层生成器架构</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span>* <span class="title function_">query</span>(<span class="attr">params</span>: <span class="title class_">QueryParams</span>)</span><br><span class="line">  └─&gt; <span class="keyword">async</span> <span class="keyword">function</span>* <span class="title function_">queryLoop</span>(params, consumedCommandUuids)</span><br><span class="line">      └─&gt; <span class="keyword">while</span> (<span class="literal">true</span>) <span class="comment">// 主循环</span></span><br><span class="line">          ├─&gt; <span class="variable constant_">API</span> 调用（模型采样）</span><br><span class="line">          ├─&gt; 工具执行</span><br><span class="line">          ├─&gt; 消息合并和上下文管理</span><br><span class="line">          ├─&gt; 恢复策略（自动紧缩、上下文折叠、<span class="title class_">Snip</span> 等）</span><br><span class="line">          └─&gt; 继续条件判断或退出</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-查询循环状态机"><a href="#2-3-查询循环状态机" class="headerlink" title="2.3 查询循环状态机"></a>2.3 查询循环状态机</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">State</span> = &#123;</span><br><span class="line">  <span class="attr">messages</span>: <span class="title class_">Message</span>[]</span><br><span class="line">  <span class="attr">toolUseContext</span>: <span class="title class_">ToolUseContext</span></span><br><span class="line">  <span class="attr">autoCompactTracking</span>: <span class="title class_">AutoCompactTrackingState</span> | <span class="literal">undefined</span></span><br><span class="line">  <span class="attr">maxOutputTokensRecoveryCount</span>: <span class="built_in">number</span></span><br><span class="line">  <span class="attr">hasAttemptedReactiveCompact</span>: <span class="built_in">boolean</span></span><br><span class="line">  <span class="attr">pendingToolUseSummary</span>: <span class="title class_">Promise</span>&lt;<span class="title class_">ToolUseSummaryMessage</span> | <span class="literal">null</span>&gt; | <span class="literal">undefined</span></span><br><span class="line">  <span class="attr">turnCount</span>: <span class="built_in">number</span></span><br><span class="line">  <span class="attr">transition</span>: <span class="title class_">Continue</span> | <span class="literal">undefined</span>  <span class="comment">// 继续原因</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-主循环流程"><a href="#2-4-主循环流程" class="headerlink" title="2.4 主循环流程"></a>2.4 主循环流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">1. [初始化] API 链追踪、查询配置、预取内存</span><br><span class="line">   ↓</span><br><span class="line">2. [上下文管理]</span><br><span class="line">   ├─ Snip 紧缩（HISTORY_SNIP 特性）</span><br><span class="line">   ├─ 微紧缩（缓存编辑）</span><br><span class="line">   ├─ 上下文折叠（CONTEXT_COLLAPSE 特性）</span><br><span class="line">   ├─ 自动紧缩（如果超过令牌阈值）</span><br><span class="line">   └─ 令牌预算检查（硬阻止限制）</span><br><span class="line">   ↓</span><br><span class="line">3. [API 流式传输]</span><br><span class="line">   ├─ 调用 deps.callModel() 获取 Claude 响应</span><br><span class="line">   ├─ 在流式传输期间处理工具使用块</span><br><span class="line">   ├─ StreamingToolExecutor 并发执行工具</span><br><span class="line">   └─ 处理流式降级（回退模型）</span><br><span class="line">   ↓</span><br><span class="line">4. [工具执行和结果处理]</span><br><span class="line">   ├─ 权限检查（canUseTool）</span><br><span class="line">   ├─ Hook 执行（pre/post 工具）</span><br><span class="line">   ├─ 消息存储（工具结果存储层）</span><br><span class="line">   └─ 分析事件记录</span><br><span class="line">   ↓</span><br><span class="line">5. [错误恢复]</span><br><span class="line">   ├─ 提示太长 (413) → 上下文折叠/反应式紧缩/截断重试</span><br><span class="line">   ├─ 媒体尺寸错误 → 反应式紧缩（剥离）</span><br><span class="line">   ├─ 最大输出令牌 → 截断恢复</span><br><span class="line">   └─ 流式降级 → 创建新执行器</span><br><span class="line">   ↓</span><br><span class="line">6. [停止条件]</span><br><span class="line">   ├─ 无工具使用块 (needsFollowUp === false)</span><br><span class="line">   ├─ 用户中断 (abortController.signal.aborted)</span><br><span class="line">   └─ 令牌预算耗尽</span><br><span class="line">   ↓</span><br><span class="line">7. [后采样]</span><br><span class="line">   ├─ Stop Hooks 执行</span><br><span class="line">   ├─ 权限钩子清理</span><br><span class="line">   └─ 分析事件</span><br><span class="line">   ↓</span><br><span class="line">8. [返回或继续]</span><br><span class="line">   根据转换原因继续循环或返回终端信号</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、核心模块详细解读"><a href="#三、核心模块详细解读" class="headerlink" title="三、核心模块详细解读"></a>三、核心模块详细解读</h2><h3 id="3-1-工具系统（-tools-45个工具）"><a href="#3-1-工具系统（-tools-45个工具）" class="headerlink" title="3.1 工具系统（&#x2F;tools - 45个工具）"></a>3.1 工具系统（&#x2F;tools - 45个工具）</h3><h4 id="工具注册架构"><a href="#工具注册架构" class="headerlink" title="工具注册架构"></a>工具注册架构</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tools.ts - 单一真实源（SSOT）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">getAllBaseTools</span>(<span class="params"></span>): <span class="title class_">Tools</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    <span class="title class_">AgentTool</span>,</span><br><span class="line">    <span class="title class_">TaskOutputTool</span>,</span><br><span class="line">    <span class="title class_">BashTool</span>,</span><br><span class="line">    <span class="title class_">FileReadTool</span>, <span class="title class_">FileEditTool</span>, <span class="title class_">FileWriteTool</span>,</span><br><span class="line">    <span class="title class_">GlobTool</span>, <span class="title class_">GrepTool</span>,</span><br><span class="line">    <span class="title class_">WebFetchTool</span>, <span class="title class_">WebSearchTool</span>,</span><br><span class="line">    <span class="title class_">SkillTool</span>,</span><br><span class="line">    <span class="title class_">EnterPlanModeTool</span>, <span class="title class_">ExitPlanModeV2Tool</span>,</span><br><span class="line">    ...(<span class="title function_">isTodoV2Enabled</span>()</span><br><span class="line">      ? [<span class="title class_">TaskCreateTool</span>, <span class="title class_">TaskGetTool</span>, <span class="title class_">TaskUpdateTool</span>, <span class="title class_">TaskListTool</span>]</span><br><span class="line">      : []),</span><br><span class="line">    ...(<span class="title function_">feature</span>(<span class="string">&#x27;KAIROS&#x27;</span>) ? [<span class="title class_">SendUserFileTool</span>, <span class="title class_">PushNotificationTool</span>, ...] : []),</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="工具定义接口（Tool-ts）"><a href="#工具定义接口（Tool-ts）" class="headerlink" title="工具定义接口（Tool.ts）"></a>工具定义接口（Tool.ts）</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">Tool</span>&lt;</span><br><span class="line">  <span class="title class_">Input</span> <span class="keyword">extends</span> <span class="title class_">AnyObject</span> = <span class="title class_">AnyObject</span>,</span><br><span class="line">  <span class="title class_">Output</span> = <span class="built_in">unknown</span>,</span><br><span class="line">  P <span class="keyword">extends</span> <span class="title class_">ToolProgressData</span> = <span class="title class_">ToolProgressData</span>,</span><br><span class="line">&gt; = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">aliases</span>?: <span class="built_in">string</span>[]</span><br><span class="line">  <span class="attr">searchHint</span>?: <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">call</span>(</span><br><span class="line">    <span class="attr">args</span>: z.<span class="property">infer</span>&lt;<span class="title class_">Input</span>&gt;,</span><br><span class="line">    <span class="attr">context</span>: <span class="title class_">ToolUseContext</span>,</span><br><span class="line">    <span class="attr">canUseTool</span>: <span class="title class_">CanUseToolFn</span>,</span><br><span class="line">    <span class="attr">parentMessage</span>: <span class="title class_">AssistantMessage</span>,</span><br><span class="line">    <span class="attr">onProgress</span>?: <span class="title class_">ToolCallProgress</span>&lt;P&gt;,</span><br><span class="line">  ): <span class="title class_">Promise</span>&lt;<span class="title class_">ToolResult</span>&lt;<span class="title class_">Output</span>&gt;&gt;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">description</span>(input, options): <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt;</span><br><span class="line">  <span class="attr">inputSchema</span>: <span class="title class_">Input</span></span><br><span class="line">  <span class="attr">inputJSONSchema</span>?: <span class="title class_">ToolInputJSONSchema</span></span><br><span class="line">  <span class="title function_">isEnabled</span>(): <span class="built_in">boolean</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="工具执行流程"><a href="#工具执行流程" class="headerlink" title="工具执行流程"></a>工具执行流程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1. [工具发现] 流式传输到达工具使用块</span><br><span class="line">   ↓</span><br><span class="line">2. [权限检查]</span><br><span class="line">   ├─ Hook 权限检查（pre 工具）</span><br><span class="line">   ├─ 分类器决策（TRANSCRIPT_CLASSIFIER）</span><br><span class="line">   ├─ 权限模式评估（default/plan/auto/bypassPermissions）</span><br><span class="line">   └─ 用户询问/自动批准</span><br><span class="line">   ↓</span><br><span class="line">3. [并发调度]（StreamingToolExecutor）</span><br><span class="line">   ├─ 并发安全工具 → 立即执行</span><br><span class="line">   ├─ 非并发工具 → 排队，等待独占访问</span><br><span class="line">   └─ 以原始工具接收顺序缓冲结果</span><br><span class="line">   ↓</span><br><span class="line">4. [工具执行]（runToolUse）</span><br><span class="line">   ├─ 输入验证（Zod/JSON Schema）</span><br><span class="line">   ├─ 分析记录</span><br><span class="line">   ├─ Telemetry 追踪（OpenTel 跨度）</span><br><span class="line">   ├─ 调用 tool.call(args, context, canUseTool)</span><br><span class="line">   └─ 错误分类和结果存储</span><br><span class="line">   ↓</span><br><span class="line">5. [结果处理]</span><br><span class="line">   ├─ 成功 → UserMessage with tool_result block</span><br><span class="line">   ├─ 权限拒绝 → 拒绝消息</span><br><span class="line">   └─ 错误 → 带 is_error=true 的工具结果</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-命令系统（-commands-100-命令）"><a href="#3-2-命令系统（-commands-100-命令）" class="headerlink" title="3.2 命令系统（&#x2F;commands - 100+命令）"></a>3.2 命令系统（&#x2F;commands - 100+命令）</h3><h4 id="命令注册（commands-ts）"><a href="#命令注册（commands-ts）" class="headerlink" title="命令注册（commands.ts）"></a>命令注册（commands.ts）</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">getCommands</span>(<span class="params"></span>): <span class="title class_">Command</span>[] &#123;</span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    <span class="comment">// 核心命令</span></span><br><span class="line">    addDir, commit, commitPushPr, clear, config, branch,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 高级命令</span></span><br><span class="line">    agent, agents, plan, fast, compact,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 诊断命令</span></span><br><span class="line">    cost, status, doctor,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 条件性（feature gates）</span></span><br><span class="line">    ...(<span class="title function_">feature</span>(<span class="string">&#x27;PROACTIVE&#x27;</span>) ? [proactive] : []),</span><br><span class="line">    ...(<span class="title function_">feature</span>(<span class="string">&#x27;KAIROS&#x27;</span>) ? [assistantCommand] : []),</span><br><span class="line">    ...(<span class="title function_">feature</span>(<span class="string">&#x27;UDS_INBOX&#x27;</span>) ? [peersCmd] : []),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 过滤远程模式</span></span><br><span class="line">    ...<span class="title function_">filterCommandsForRemoteMode</span>(allCommands),</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="命令类型定义"><a href="#命令类型定义" class="headerlink" title="命令类型定义"></a>命令类型定义</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">Command</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">slashCommand</span>?: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">description</span>: <span class="built_in">string</span></span><br><span class="line"></span><br><span class="line">  <span class="title function_">execute</span>(</span><br><span class="line">    <span class="attr">context</span>: <span class="title class_">ProcessUserInputContext</span>,</span><br><span class="line">    <span class="attr">args</span>: <span class="built_in">string</span>[],</span><br><span class="line">  ): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt;</span><br><span class="line"></span><br><span class="line">  <span class="attr">isAvailable</span>?: <span class="function">(<span class="params">context</span>) =&gt;</span> <span class="built_in">boolean</span></span><br><span class="line">  <span class="attr">isJSX</span>?: <span class="built_in">boolean</span></span><br><span class="line">  <span class="attr">isLocalJSX</span>?: <span class="built_in">boolean</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-上下文构建（context-ts）"><a href="#3-3-上下文构建（context-ts）" class="headerlink" title="3.3 上下文构建（context.ts）"></a>3.3 上下文构建（context.ts）</h3><h4 id="系统提示构建"><a href="#系统提示构建" class="headerlink" title="系统提示构建"></a>系统提示构建</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 缓存贯穿整个对话</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getSystemContext = <span class="title function_">memoize</span>(<span class="title function_">async</span> (): <span class="title class_">Promise</span>&lt;&#123;</span><br><span class="line">  [<span class="attr">k</span>: <span class="built_in">string</span>]: <span class="built_in">string</span></span><br><span class="line">&#125;&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> gitStatus = <span class="keyword">await</span> <span class="title function_">getGitStatus</span>()</span><br><span class="line">  <span class="keyword">const</span> injection = <span class="title function_">getSystemPromptInjection</span>()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; gitStatus, <span class="attr">cacheBreaker</span>: ... &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getUserContext = <span class="title function_">memoize</span>(<span class="title function_">async</span> (): <span class="title class_">Promise</span>&lt;&#123;</span><br><span class="line">  [<span class="attr">k</span>: <span class="built_in">string</span>]: <span class="built_in">string</span></span><br><span class="line">&#125;&gt; =&gt; &#123;</span><br><span class="line">  <span class="comment">// CLAUDE.md 自动发现</span></span><br><span class="line">  <span class="keyword">const</span> claudeMd = shouldDisableClaudeMd</span><br><span class="line">    ? <span class="literal">null</span></span><br><span class="line">    : <span class="title function_">getClaudeMds</span>(<span class="title function_">filterInjectedMemoryFiles</span>(<span class="keyword">await</span> <span class="title function_">getMemoryFiles</span>()))</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123; claudeMd, <span class="attr">currentDate</span>: <span class="string">&quot;今天的日期是...&quot;</span> &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-MCP-服务（-services-mcp）"><a href="#3-4-MCP-服务（-services-mcp）" class="headerlink" title="3.4 MCP 服务（&#x2F;services&#x2F;mcp）"></a>3.4 MCP 服务（&#x2F;services&#x2F;mcp）</h3><h4 id="MCP-客户端架构"><a href="#MCP-客户端架构" class="headerlink" title="MCP 客户端架构"></a>MCP 客户端架构</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">MCPClient</span> &#123;</span><br><span class="line">  <span class="comment">// 生命周期</span></span><br><span class="line">  <span class="title function_">connect</span>(<span class="attr">serverConfig</span>: <span class="title class_">McpServerConfig</span>)</span><br><span class="line">  <span class="title function_">disconnect</span>()</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 工具管理</span></span><br><span class="line">  <span class="title function_">listTools</span>(): <span class="title class_">Promise</span>&lt;<span class="title class_">MCPTool</span>[]&gt;</span><br><span class="line">  <span class="title function_">callTool</span>(<span class="attr">toolName</span>: <span class="built_in">string</span>, <span class="attr">input</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="built_in">unknown</span>&gt;): <span class="title class_">Promise</span>&lt;<span class="title class_">MCPToolResult</span>&gt;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 资源管理</span></span><br><span class="line">  <span class="title function_">listResources</span>(): <span class="title class_">Promise</span>&lt;<span class="title class_">ServerResource</span>[]&gt;</span><br><span class="line">  <span class="title function_">readResource</span>(<span class="attr">uri</span>: <span class="built_in">string</span>): <span class="title class_">Promise</span>&lt;<span class="title class_">ResourceContent</span>&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="工具适配"><a href="#工具适配" class="headerlink" title="工具适配"></a>工具适配</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createMcpToolAdapter</span>(<span class="params">mcpTool, client</span>): <span class="title class_">Tool</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">`mcp__<span class="subst">$&#123;serverName&#125;</span>__<span class="subst">$&#123;toolName&#125;</span>`</span>,</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">call</span>(<span class="params">args, context, canUseTool, parentMessage</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> result = <span class="keyword">await</span> client.<span class="title function_">callTool</span>(toolName, args)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">data</span>: result,</span><br><span class="line">        <span class="attr">newMessages</span>: result.<span class="property">messages</span>,</span><br><span class="line">        <span class="attr">mcpMeta</span>: result.<span class="property">meta</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-权限系统（-utils-permissions）"><a href="#3-5-权限系统（-utils-permissions）" class="headerlink" title="3.5 权限系统（&#x2F;utils&#x2F;permissions）"></a>3.5 权限系统（&#x2F;utils&#x2F;permissions）</h3><h4 id="权限模式"><a href="#权限模式" class="headerlink" title="权限模式"></a>权限模式</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">PermissionMode</span> =</span><br><span class="line">  | <span class="string">&#x27;default&#x27;</span>          <span class="comment">// 提示用户</span></span><br><span class="line">  | <span class="string">&#x27;plan&#x27;</span>             <span class="comment">// 计划模式（只读）</span></span><br><span class="line">  | <span class="string">&#x27;auto&#x27;</span>             <span class="comment">// 自动分类（TRANSCRIPT_CLASSIFIER）</span></span><br><span class="line">  | <span class="string">&#x27;bypassPermissions&#x27;</span> <span class="comment">// 跳过检查</span></span><br><span class="line">  | <span class="string">&#x27;dontAsk&#x27;</span>          <span class="comment">// 拒绝所有</span></span><br><span class="line">  | <span class="string">&#x27;acceptEdits&#x27;</span>      <span class="comment">// 允许编辑</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="权限决策流程"><a href="#权限决策流程" class="headerlink" title="权限决策流程"></a>权限决策流程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 权限规则检查（SSOT）</span><br><span class="line">   ↓</span><br><span class="line">2. Hook 权限检查（提前拒绝）</span><br><span class="line">   ↓</span><br><span class="line">3. 分类器决策（TRANSCRIPT_CLASSIFIER）</span><br><span class="line">   ↓</span><br><span class="line">4. 用户询问（如需要）</span><br><span class="line">   ↓</span><br><span class="line">5. 记录分析</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、设计模式与工程实践"><a href="#四、设计模式与工程实践" class="headerlink" title="四、设计模式与工程实践"></a>四、设计模式与工程实践</h2><h3 id="4-1-设计模式识别"><a href="#4-1-设计模式识别" class="headerlink" title="4.1 设计模式识别"></a>4.1 设计模式识别</h3><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生成器模式</td>
+<td>query.ts 的异步生成器实现流式处理</td>
+</tr>
+<tr>
+<td>工具链模式</td>
+<td>权限检查 → Hook 执行 → 工具执行</td>
+</tr>
+<tr>
+<td>策略模式</td>
+<td>多种紧缩策略可互换</td>
+</tr>
+<tr>
+<td>工厂模式</td>
+<td>工具和命令的动态创建</td>
+</tr>
+<tr>
+<td>适配器模式</td>
+<td>MCP 工具转换为内置工具接口</td>
+</tr>
+<tr>
+<td>观察者模式</td>
+<td>进度回调和事件监听</td>
+</tr>
+<tr>
+<td>状态模式</td>
+<td>查询循环的状态机</td>
+</tr>
+<tr>
+<td>缓存模式</td>
+<td>系统提示和上下文缓存</td>
+</tr>
+<tr>
+<td>功能开关模式</td>
+<td>条件编译和死代码消除</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-工程实践"><a href="#4-2-工程实践" class="headerlink" title="4.2 工程实践"></a>4.2 工程实践</h3><h4 id="代码组织"><a href="#代码组织" class="headerlink" title="代码组织"></a>代码组织</h4><ul>
+<li><strong>单一真实源（SSOT）</strong>：tools.ts、commands.ts 是工具&#x2F;命令的 SSOT</li>
+<li><strong>导入循环破坏</strong>：用懒加载和类型中心破坏循环</li>
+<li><strong>特性开关</strong>：<code>feature()</code> 进行编译时条件编译</li>
+</ul>
+<h4 id="类型系统"><a href="#类型系统" class="headerlink" title="类型系统"></a>类型系统</h4><ul>
+<li><strong>深度类型安全</strong>：大量泛型和精确的 Zod 模式</li>
+<li><strong>类型中心架构</strong>：类型定义在 &#x2F;types 中心化</li>
+</ul>
+<h4 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h4><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 输入验证</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> validated = toolSchema.<span class="title function_">parse</span>(input)</span><br><span class="line">&#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">  <span class="title function_">formatZodValidationError</span>(error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. API 错误分类</span></span><br><span class="line"><span class="title function_">categorizeRetryableAPIError</span>(error)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 工具错误分类</span></span><br><span class="line"><span class="title function_">classifyToolError</span>(error)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 恢复策略</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_">isPromptTooLongMessage</span>(error)) &#123;</span><br><span class="line">  <span class="comment">// 触发上下文折叠 → 反应式紧缩 → 截断重试</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h4><ul>
+<li><strong>启动优化</strong>：MDM&#x2F;Keychain 并行预热、懒加载、死代码消除</li>
+<li><strong>流式优化</strong>：StreamingToolExecutor 在模型流式传输期间执行工具</li>
+<li><strong>上下文优化</strong>：自动紧缩、Snip 紧缩、上下文折叠</li>
+<li><strong>缓存</strong>：系统提示缓存、文件读取 LRU、内存预取</li>
+</ul>
+<hr>
+<h2 id="五、可借鉴学习的特点"><a href="#五、可借鉴学习的特点" class="headerlink" title="五、可借鉴学习的特点"></a>五、可借鉴学习的特点</h2><h3 id="5-1-架构设计"><a href="#5-1-架构设计" class="headerlink" title="5.1 架构设计"></a>5.1 架构设计</h3><ol>
+<li><strong>生成器流式架构</strong>：使用 async generator 实现实时流式处理，是 AI Agent 的理想选择</li>
+<li><strong>工具注册模式</strong>：单一真实源（SSOT）+ 条件加载，便于扩展</li>
+<li><strong>并发调度</strong>：安全的工具并行运行，非安全工具排队</li>
+</ol>
+<h3 id="5-2-工程质量"><a href="#5-2-工程质量" class="headerlink" title="5.2 工程质量"></a>5.2 工程质量</h3><ol>
+<li><strong>类型安全</strong>：深度泛型和 Zod 模式确保运行时安全</li>
+<li><strong>错误恢复</strong>：多层嵌套的恢复策略（3层：上下文折叠 → 反应式紧缩 → 截断重试）</li>
+<li><strong>遥测完善</strong>：详细的事件记录和 OpenTel 跟踪</li>
+</ol>
+<h3 id="5-3-权限设计"><a href="#5-3-权限设计" class="headerlink" title="5.3 权限设计"></a>5.3 权限设计</h3><p>多层权限检查（规则 → Hook → 分类器 → 用户询问），平衡安全性和用户体验。</p>
+<h3 id="5-4-性能优化"><a href="#5-4-性能优化" class="headerlink" title="5.4 性能优化"></a>5.4 性能优化</h3><ul>
+<li>启动时并行 I&#x2F;O 预热</li>
+<li>令牌预算管理和自动紧缩</li>
+<li>工具结果缓存和内存预取</li>
+</ul>
+<h3 id="5-5-可扩展性"><a href="#5-5-可扩展性" class="headerlink" title="5.5 可扩展性"></a>5.5 可扩展性</h3><ul>
+<li>MCP 协议支持扩展外部服务</li>
+<li>技能系统（SkillTool）支持用户自定义</li>
+<li>Hook 系统允许扩展权限、工具执行等行为</li>
+</ul>
+<hr>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>Claude Code 是一个<strong>企业级的 AI 编程助手</strong>，其源码体现了高质量的 TypeScript 工程实践：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>评价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模块化</td>
+<td>工具、命令、服务清晰分离</td>
+</tr>
+<tr>
+<td>流式架构</td>
+<td>生成器实现实时反馈和并发执行</td>
+</tr>
+<tr>
+<td>可扩展性</td>
+<td>工具&#x2F;命令通过简单接口易于扩展</td>
+</tr>
+<tr>
+<td>权限管理</td>
+<td>多层权限检查和灵活配置</td>
+</tr>
+<tr>
+<td>性能优化</td>
+<td>自动上下文紧缩、缓存、流式工具执行</td>
+</tr>
+<tr>
+<td>类型安全</td>
+<td>深度泛型和 Zod 验证</td>
+</tr>
+</tbody></table>
+<p>核心是一个高效的 <strong>Agent Loop</strong>（query.ts），由以下层次支撑：</p>
+<ul>
+<li><strong>工具执行层</strong>：45+ 工具、MCP 集成、并发执行</li>
+<li><strong>权限层</strong>：多模式权限管理和 Hook 系统</li>
+<li><strong>上下文层</strong>：自动紧缩、上下文折叠、Snip 压缩</li>
+<li><strong>服务层</strong>：Claude API、分析、MCP、OAuth 等</li>
+<li><strong>UI 层</strong>：React + Ink 终端 UI</li>
+</ul>
+<p>这个项目是学习大型 TypeScript AI 应用架构的绝佳参考。</p>
+<hr>
+<p><em>文档生成时间：2026-04-01</em><br><em>基于 Claude Code 源码泄露版本分析</em></p>
 
         
   </div>
@@ -124,6 +334,8 @@
       <ul>
         <!--
        --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
      --><!--
        --><li><a href="/about/">About</a></li><!--
      --><!--
