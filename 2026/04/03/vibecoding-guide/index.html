@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="AI协作不是魔法，需要系统化的方法论。   开篇很多人开始用AI写代码后，发现一个问题：有时候效率惊人，有时候却反复返工，甚至比自己写还慢。 问题不在AI，而在协作方式。 AI协作就像开车——有车不会开，照样到不了目的地。你需要一套系统化的方法论，才能让AI真正成为你的10倍效率放大器。 基于日常开发经验，归纳了6个核心实践原则，每个都配有实战案例。  6个核心原则1. 清晰准备核心：信息架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vibe Coding 实践指南：6个原则让AI协作效率翻倍">
+<meta property="og:url" content="https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/index.html">
+<meta property="og:site_name" content="袁旭佳(Aaron)的博客">
+<meta property="og:description" content="AI协作不是魔法，需要系统化的方法论。   开篇很多人开始用AI写代码后，发现一个问题：有时候效率惊人，有时候却反复返工，甚至比自己写还慢。 问题不在AI，而在协作方式。 AI协作就像开车——有车不会开，照样到不了目的地。你需要一套系统化的方法论，才能让AI真正成为你的10倍效率放大器。 基于日常开发经验，归纳了6个核心实践原则，每个都配有实战案例。  6个核心原则1. 清晰准备核心：信息架构">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-03T14:16:16.000Z">
+<meta property="article:modified_time" content="2026-04-03T14:39:47.666Z">
+<meta property="article:author" content="袁旭佳(Aaron)">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="效率">
+<meta property="article:tag" content="编程">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Vibe Coding 实践指南：6个原则让AI协作效率翻倍</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/04/03/my-tool-list/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&text=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&is_video=false&description=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vibe Coding 实践指南：6个原则让AI协作效率翻倍&body=Check out this article: https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&name=Vibe Coding 实践指南：6个原则让AI协作效率翻倍&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&t=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">开篇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E4%B8%AA%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text">6个核心原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B8%85%E6%99%B0%E5%87%86%E5%A4%87"><span class="toc-number">2.1.</span> <span class="toc-text">1. 清晰准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8B%86%E8%A7%A3%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2. 拆解任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BA%BA%E5%B7%A5%E6%8A%8A%E5%85%B3"><span class="toc-number">2.3.</span> <span class="toc-text">3. 人工把关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%AB%98%E6%95%88%E5%8D%8F%E4%BD%9C"><span class="toc-number">2.4.</span> <span class="toc-text">4. 高效协作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%B3%BB%E7%BB%9F%E8%AE%B0%E5%BD%95"><span class="toc-number">2.5.</span> <span class="toc-text">5. 系统记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%8C%81%E7%BB%AD%E6%88%90%E9%95%BF"><span class="toc-number">2.6.</span> <span class="toc-text">6. 持续成长</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%BF%83%E5%BE%97"><span class="toc-number">3.</span> <span class="toc-text">实战心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Vibe Coding 实践指南：6个原则让AI协作效率翻倍
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">袁旭佳(Aaron)</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-04-03T14:16:16.000Z" class="dt-published" itemprop="datePublished">2026-04-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/AI/" rel="tag">AI</a>, <a class="p-category" href="/tags/%E6%95%88%E7%8E%87/" rel="tag">效率</a>, <a class="p-category" href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag">编程</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>AI协作不是魔法，需要系统化的方法论。</p>
+</blockquote>
+<hr>
+<h2 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h2><p>很多人开始用AI写代码后，发现一个问题：有时候效率惊人，有时候却反复返工，甚至比自己写还慢。</p>
+<p>问题不在AI，而在协作方式。</p>
+<p>AI协作就像开车——有车不会开，照样到不了目的地。你需要一套系统化的方法论，才能让AI真正成为你的10倍效率放大器。</p>
+<p>基于日常开发经验，归纳了6个核心实践原则，每个都配有实战案例。</p>
+<hr>
+<h2 id="6个核心原则"><a href="#6个核心原则" class="headerlink" title="6个核心原则"></a>6个核心原则</h2><h3 id="1-清晰准备"><a href="#1-清晰准备" class="headerlink" title="1. 清晰准备"></a>1. 清晰准备</h3><p><strong>核心</strong>：信息架构 + 明确需求 + 上下文洁净</p>
+<p>AI不是读心术，它需要清晰的输入。把所有需求、设计、上下文集中管理，用清晰的提示词告诉它要做什么。</p>
+<p><strong>实战案例：开发用户认证功能</strong></p>
+<p>❌ <strong>错误做法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我写个登录功能</span><br></pre></td></tr></table></figure>
+
+<p>✅ <strong>正确做法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">需求：实现用户登录功能</span><br><span class="line">输入：邮箱/密码</span><br><span class="line">输出：JWT token</span><br><span class="line">约束：使用bcrypt加密，支持token刷新</span><br><span class="line">风格：遵循项目现有代码规范</span><br><span class="line">参考：/docs/auth-spec.md</span><br></pre></td></tr></table></figure>
+
+<p><strong>效果差异</strong>：前者可能生成一堆你不需要的代码，后者精准命中需求，节省大量调试时间。</p>
+<hr>
+<h3 id="2-拆解任务"><a href="#2-拆解任务" class="headerlink" title="2. 拆解任务"></a>2. 拆解任务</h3><p><strong>核心</strong>：大任务拆小块，10~30分钟可完成</p>
+<p>一次性让AI写5000行代码？别这么做。大任务要拆成小块，每块完成后立即验证。</p>
+<p><strong>实战案例：开发博客系统</strong></p>
+<p>❌ <strong>错误做法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">帮我写一个完整的博客系统，包括用户、文章、评论、标签...</span><br></pre></td></tr></table></figure>
+
+<p>✅ <strong>正确做法</strong></p>
+<ol>
+<li>数据库模型设计（15分钟）</li>
+<li>用户注册API（20分钟）</li>
+<li>文章CRUD（25分钟）</li>
+<li>评论功能（20分钟）</li>
+</ol>
+<p>每块完成后立即测试验证，有问题及时调整。</p>
+<p><strong>效果差异</strong>：前者生成大量代码后难以调试，后者每步可控，出错成本极低。</p>
+<hr>
+<h3 id="3-人工把关"><a href="#3-人工把关" class="headerlink" title="3. 人工把关"></a>3. 人工把关</h3><p><strong>核心</strong>：AI负责初稿，人类负责关键决策与风险审查</p>
+<p>AI产出很快，但业务判断、安全风险、架构决策，必须由人来把关。</p>
+<p><strong>实战案例：AI生成数据删除函数</strong></p>
+<p>❌ <strong>错误做法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">直接合并到主分支</span><br></pre></td></tr></table></figure>
+
+<p>✅ <strong>正确做法</strong><br>审查关键点：</p>
+<ul>
+<li>是否有软删除逻辑？</li>
+<li>权限检查是否完备？</li>
+<li>级联删除风险？</li>
+<li>数据备份策略？</li>
+</ul>
+<p>发现问题后再让AI修复。</p>
+<p><strong>效果差异</strong>：前者可能造成数据灾难，后者确保安全可控。</p>
+<hr>
+<h3 id="4-高效协作"><a href="#4-高效协作" class="headerlink" title="4. 高效协作"></a>4. 高效协作</h3><p><strong>核心</strong>：AI工作时并行处理低认知任务，保持专注流</p>
+<p>AI生成代码需要时间，这段时间别刷手机。准备一个”副任务清单”，处理低认知负载任务。</p>
+<p><strong>实战案例：让AI生成单元测试</strong></p>
+<p>❌ <strong>错误做法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">等待时刷社交媒体，节奏断档</span><br></pre></td></tr></table></figure>
+
+<p>✅ <strong>正确做法</strong><br>并行处理：</p>
+<ul>
+<li>整理项目文档</li>
+<li>处理简单的PR review</li>
+<li>回复非紧急的issue</li>
+<li>更新README</li>
+</ul>
+<p>保持心流不被打断。</p>
+<p><strong>效果差异</strong>：前者等待时间浪费且难以恢复状态，后者充分利用碎片时间，效率持续。</p>
+<hr>
+<h3 id="5-系统记录"><a href="#5-系统记录" class="headerlink" title="5. 系统记录"></a>5. 系统记录</h3><p><strong>核心</strong>：保存协作过程，确保可追溯和可复现</p>
+<p>AI协作不是一次性交易，要记录过程、优化prompt、积累经验。</p>
+<p><strong>实战案例：每次AI协作后记录</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">## AI协作日志</span><br><span class="line">- 时间：2026-04-03 14:30</span><br><span class="line">- 任务：重构用户服务</span><br><span class="line">- Prompt：[保存的提示词]</span><br><span class="line">- AI版本：Claude Opus 4.6</span><br><span class="line">- 结果：成功，节省2小时</span><br><span class="line">- 问题：生成的类型定义需要手动调整</span><br><span class="line">- 优化：下次在prompt中明确类型要求</span><br></pre></td></tr></table></figure>
+
+<p><strong>效果差异</strong>：前者协作过程无记录，出错无法还原；后者持续优化，效率越用越高。</p>
+<hr>
+<h3 id="6-持续成长"><a href="#6-持续成长" class="headerlink" title="6. 持续成长"></a>6. 持续成长</h3><p><strong>核心</strong>：定期复盘优化，保持独立判断和好奇心</p>
+<p>AI是放大镜，放大能力，也放大短板。持续学习，保持独立判断能力。</p>
+<p><strong>实战案例：每周五复盘</strong></p>
+<ul>
+<li>本周AI协作次数：15次</li>
+<li>最有效的prompt模板：[保存链接]</li>
+<li>遇到的坑：上下文过长导致AI遗忘</li>
+<li>下周改进：增加上下文总结环节</li>
+<li>新学技巧：使用@file引用代码</li>
+</ul>
+<p><strong>效果差异</strong>：前者重复踩坑，后者持续进化，建立自己的AI协作体系。</p>
+<hr>
+<h2 id="实战心得"><a href="#实战心得" class="headerlink" title="实战心得"></a>实战心得</h2><p>从踩坑到高效，我总结了几点：</p>
+<ol>
+<li><p><strong>不要迷信AI</strong>：AI是工具，不是替代。业务判断、架构决策必须由人来把控。</p>
+</li>
+<li><p><strong>建立你的prompt库</strong>：把验证过的prompt模板保存下来，复用效率更高。</p>
+</li>
+<li><p><strong>保持好奇心</strong>：面对AI答案，先问”为什么”，再问”还能更好吗”。</p>
+</li>
+<li><p><strong>定期复盘</strong>：每周花10分钟回顾AI协作情况，优化工作流。</p>
+</li>
+</ol>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>AI协作的核心，在于建立系统化的工作流，而非单点技巧。</p>
+<p>6个原则，环环相扣：</p>
+<ul>
+<li><strong>清晰准备</strong> + <strong>拆解任务</strong> &#x3D; 精准输入</li>
+<li><strong>人工把关</strong> + <strong>高效协作</strong> &#x3D; 可控输出</li>
+<li><strong>系统记录</strong> + <strong>持续成长</strong> &#x3D; 持续优化</li>
+</ul>
+<p>建立你的AI协作工作流，让AI真正成为你的10倍效率放大器。</p>
+<hr>
+<p><strong>最后</strong>：这些原则不是教条，而是起点。根据你的实际情况调整，找到最适合你的协作方式。</p>
+<hr>
+<blockquote>
+<p>原创不易，如果对你有帮助，欢迎点赞收藏～</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/claude-code-source/">Claude-Code</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">开篇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E4%B8%AA%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text">6个核心原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B8%85%E6%99%B0%E5%87%86%E5%A4%87"><span class="toc-number">2.1.</span> <span class="toc-text">1. 清晰准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8B%86%E8%A7%A3%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2. 拆解任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BA%BA%E5%B7%A5%E6%8A%8A%E5%85%B3"><span class="toc-number">2.3.</span> <span class="toc-text">3. 人工把关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%AB%98%E6%95%88%E5%8D%8F%E4%BD%9C"><span class="toc-number">2.4.</span> <span class="toc-text">4. 高效协作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%B3%BB%E7%BB%9F%E8%AE%B0%E5%BD%95"><span class="toc-number">2.5.</span> <span class="toc-text">5. 系统记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%8C%81%E7%BB%AD%E6%88%90%E9%95%BF"><span class="toc-number">2.6.</span> <span class="toc-text">6. 持续成长</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E5%BF%83%E5%BE%97"><span class="toc-number">3.</span> <span class="toc-text">实战心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&text=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&is_video=false&description=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vibe Coding 实践指南：6个原则让AI协作效率翻倍&body=Check out this article: https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&title=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&name=Vibe Coding 实践指南：6个原则让AI协作效率翻倍&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/04/03/vibecoding-guide/&t=Vibe Coding 实践指南：6个原则让AI协作效率翻倍"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2026
+    袁旭佳(Aaron)
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
