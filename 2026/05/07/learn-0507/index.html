@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="个人学习方向分析与资料汇总 生成时间：2026-05.07数据来源：daily_Q 目录近一周问题（2026.05.02 ~ 2026.05.06，共4天）分析目标：基于你的问题模式识别知识薄弱领域，提供针对性学习路径和资源   一、近一周问题统计与分析1.1 问题领域分布（共约35+个问题）   优先级 领域 问题数 严重程度    🔴 P0 LLM 底层原理与 Transformer 架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近期学习方向">
+<meta property="og:url" content="https://yuanxujia8090.github.io/2026/05/07/learn-0507/index.html">
+<meta property="og:site_name" content="袁旭佳(Aaron)的博客">
+<meta property="og:description" content="个人学习方向分析与资料汇总 生成时间：2026-05.07数据来源：daily_Q 目录近一周问题（2026.05.02 ~ 2026.05.06，共4天）分析目标：基于你的问题模式识别知识薄弱领域，提供针对性学习路径和资源   一、近一周问题统计与分析1.1 问题领域分布（共约35+个问题）   优先级 领域 问题数 严重程度    🔴 P0 LLM 底层原理与 Transformer 架构">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-07T07:54:33.000Z">
+<meta property="article:modified_time" content="2026-05-07T07:57:49.421Z">
+<meta property="article:author" content="袁旭佳(Aaron)">
+<meta property="article:tag" content="agent">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>近期学习方向</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/04/04/Harness-Engineering/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/07/learn-0507/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&text=近期学习方向"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&is_video=false&description=近期学习方向"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=近期学习方向&body=Check out this article: https://yuanxujia8090.github.io/2026/05/07/learn-0507/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&name=近期学习方向&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&t=近期学习方向"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E5%AD%A6%E4%B9%A0%E6%96%B9%E5%90%91%E5%88%86%E6%9E%90%E4%B8%8E%E8%B5%84%E6%96%99%E6%B1%87%E6%80%BB"><span class="toc-number">1.</span> <span class="toc-text">个人学习方向分析与资料汇总</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%91%E4%B8%80%E5%91%A8%E9%97%AE%E9%A2%98%E7%BB%9F%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">一、近一周问题统计与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%97%AE%E9%A2%98%E9%A2%86%E5%9F%9F%E5%88%86%E5%B8%83%EF%BC%88%E5%85%B1%E7%BA%A635-%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 问题领域分布（共约35+个问题）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 关键发现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%88%86%E9%A2%86%E5%9F%9F%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E4%B8%8E%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E4%BC%98%E5%85%88%E7%BA%A7%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、分领域学习路径与资源（按优先级）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B4-P0%EF%BC%9ALLM-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E4%B8%8E-Transformer-%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">🔴 P0：LLM 底层原理与 Transformer 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">推荐资源（按学习顺序）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B4-P0%EF%BC%9A%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E4%B8%8E%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">🔴 P0：模型量化与压缩技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%89-1"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">推荐资源（按学习顺序）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-1"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-P1%EF%BC%9A%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E5%BA%95%E5%B1%82%EF%BC%88vLLM-MLX-llama-cpp%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">🟡 P1：推理引擎底层（vLLM &#x2F; MLX &#x2F; llama.cpp）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-2"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">推荐资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-2"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-P1%EF%BC%9AAgent-%E5%B7%A5%E7%A8%8B%E5%8C%96%EF%BC%88%E7%86%94%E6%96%AD%E6%9C%BA%E5%88%B6-%E6%AD%BB%E5%BE%AA%E7%8E%AF%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">🟡 P1：Agent 工程化（熔断机制 &#x2F; 死循环）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-3"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90-1"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">推荐资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-3"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A2-P2%EF%BC%9AAI-%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%EF%BC%88%E6%96%87%E7%94%9F%E5%9B%BE-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">🟢 P2：AI 应用开发（文生图 &#x2F; 浏览器自动化）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90-2"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">推荐资源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%8E%A8%E8%8D%90%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%8830%E5%A4%A9%E8%AE%A1%E5%88%92%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">三、推荐学习顺序（30天计划）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%A1%A5%E5%85%85%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95"><span class="toc-number">1.4.</span> <span class="toc-text">四、补充资源清单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%9A-%E5%8D%9A%E5%AE%A2-%E9%A2%91%E9%81%93%E6%8E%A8%E8%8D%90"><span class="toc-number">1.4.1.</span> <span class="toc-text">📚 博客 &amp; 频道推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%93-%E8%AF%BE%E7%A8%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">🎓 课程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8F%86-Benchmark-%E7%A4%BE%E5%8C%BA"><span class="toc-number">1.4.3.</span> <span class="toc-text">🏆 Benchmark &amp; 社区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E4%BD%A0%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E4%B8%8E%E6%94%B9%E8%BF%9B%E6%96%B9%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">五、总结：你的核心优势与改进方向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%B7%B2%E5%81%9A%E5%BE%97%E5%A5%BD%E7%9A%84"><span class="toc-number">1.5.1.</span> <span class="toc-text">✅ 已做得好的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%AF-%E4%B8%8B%E4%B8%80%E6%AD%A5%E9%87%8D%E7%82%B9"><span class="toc-number">1.5.2.</span> <span class="toc-text">🎯 下一步重点</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        近期学习方向
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">袁旭佳(Aaron)</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-05-07T07:54:33.000Z" class="dt-published" itemprop="datePublished">2026-05-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/agent/" rel="tag">agent</a>, <a class="p-category" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="个人学习方向分析与资料汇总"><a href="#个人学习方向分析与资料汇总" class="headerlink" title="个人学习方向分析与资料汇总"></a>个人学习方向分析与资料汇总</h1><blockquote>
+<p><strong>生成时间</strong>：2026-05.07<br><strong>数据来源</strong>：daily_Q 目录近一周问题（2026.05.02 ~ 2026.05.06，共4天）<br><strong>分析目标</strong>：基于你的问题模式识别知识薄弱领域，提供针对性学习路径和资源</p>
+</blockquote>
+<hr>
+<h2 id="一、近一周问题统计与分析"><a href="#一、近一周问题统计与分析" class="headerlink" title="一、近一周问题统计与分析"></a>一、近一周问题统计与分析</h2><h3 id="1-1-问题领域分布（共约35-个问题）"><a href="#1-1-问题领域分布（共约35-个问题）" class="headerlink" title="1.1 问题领域分布（共约35+个问题）"></a>1.1 问题领域分布（共约35+个问题）</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>领域</th>
+<th>问题数</th>
+<th>严重程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🔴 P0</td>
+<td>LLM 底层原理与 Transformer 架构</td>
+<td>~9题</td>
+<td>知识黑盒，最需系统学习</td>
+</tr>
+<tr>
+<td>🔴 P0</td>
+<td>模型量化与压缩技术（GGUF&#x2F;GPTQ&#x2F;AWX）</td>
+<td>~8题</td>
+<td>实操中频繁遇到困惑度问题</td>
+</tr>
+<tr>
+<td>🟡 P1</td>
+<td>推理引擎底层（vLLM &#x2F; MLX &#x2F; llama.cpp）</td>
+<td>~7题</td>
+<td>vMLX 速度优化反复出现</td>
+</tr>
+<tr>
+<td>🟡 P1</td>
+<td>Agent 工程化（熔断机制&#x2F;死循环）</td>
+<td>~5题</td>
+<td>影响实际使用体验的 bug</td>
+</tr>
+<tr>
+<td>🟢 P2</td>
+<td>AI 应用开发（文生图&#x2F;浏览器自动化）</td>
+<td>~3题</td>
+<td>偏实操，边做边学即可</td>
+</tr>
+<tr>
+<td>🟢 P2</td>
+<td>工程化&#x2F;商业（海外建站&#x2F;外贸）</td>
+<td>~3题</td>
+<td>非技术核心，按需学习</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-关键发现"><a href="#1-2-关键发现" class="headerlink" title="1.2 关键发现"></a>1.2 关键发现</h3><p>你目前处于 <strong>从前端开发向 AI&#x2F;LLM 工程化转型</strong> 的关键阶段，问题呈现以下特征：</p>
+<ol>
+<li><strong>底层原理理解不足但意识强烈</strong> — 你在 5&#x2F;05 的问题清单中列出了非常系统的学习框架（Transformer、RoPE、采样策略等），说明你清楚自己缺什么，但缺乏<strong>结构化学习路径</strong>。</li>
+<li><strong>部署工具对比困惑多</strong> — vMLX、LM Studio、oMLX 三者之间的差异和参数调优是高频问题，核心原因是缺乏对<strong>底层推理引擎原理</strong>的理解。</li>
+<li><strong>量化格式一头雾水</strong> — Q4_K_M、Q4_k_L、JANG 等命名规则，本质是对 GGUF&#x2F;GPTQ&#x2F;AWX 格式缺乏系统了解。</li>
+<li><strong>Agent 工程化经验欠缺</strong> — 死循环熔断是实际痛点，需要参考业界最佳实践。</li>
+</ol>
+<hr>
+<h2 id="二、分领域学习路径与资源（按优先级）"><a href="#二、分领域学习路径与资源（按优先级）" class="headerlink" title="二、分领域学习路径与资源（按优先级）"></a>二、分领域学习路径与资源（按优先级）</h2><h3 id="🔴-P0：LLM-底层原理与-Transformer-架构"><a href="#🔴-P0：LLM-底层原理与-Transformer-架构" class="headerlink" title="🔴 P0：LLM 底层原理与 Transformer 架构"></a>🔴 P0：LLM 底层原理与 Transformer 架构</h3><h4 id="学习目标"><a href="#学习目标" class="headerlink" title="学习目标"></a>学习目标</h4><ul>
+<li>理解 Attention、FFN、LayerNorm 的数学推导和代码实现</li>
+<li>掌握自回归生成过程的 Prefill&#x2F;Decode 阶段差异</li>
+<li>理解 RoPE、ALiBi、YaRN 等长上下文扩展技术</li>
+</ul>
+<h4 id="推荐资源（按学习顺序）"><a href="#推荐资源（按学习顺序）" class="headerlink" title="推荐资源（按学习顺序）"></a>推荐资源（按学习顺序）</h4><p><strong>1. 视频入门（建立直觉）</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=wjZofJX0v4M">3Blue1Brown - But what is a GPT?</a> — 用可视化解释 GPT 工作原理，3Blue1Brown 出品</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">3B1B - Neural Networks</a> — 神经网络系列，理解 Backprop</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/c/YannicKilcher">Yannic Kilcher - Transformer Papers</a> — 论文解读频道</li>
+</ul>
+<p><strong>2. 图文教程（系统学习）</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a> — Jay Alammar 出品，图解 Transformer 经典教程（必读）</li>
+<li><a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-gpt2/">The Illustrated GPT-2</a> — 同上作者，延伸理解 GPT</li>
+<li><a target="_blank" rel="noopener" href="https://mlabonne.github.io/blog/posts/2024-07-15_DPO.html">The Illustrated DPO</a> — Maxime Labonne，图解 DPO 对齐</li>
+<li><a target="_blank" rel="noopener" href="https://lillianweng.github.io/lil-log/2023/03/15/transformer-attention.html">lilianweng.github.io - LLM Survey</a> — Lilian Weng 的 LLM 系列博客（极深）</li>
+</ul>
+<p><strong>3. 数学推导 + 代码实现</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/yangjianxin1/minimind">minimind (GitHub)</a> — 从零实现 LLM，包含完整训练代码</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/karpathy/micrograd">Andrej Karpathy - micrograd + nanogpt</a> &#x2F; <a target="_blank" rel="noopener" href="https://github.com/karpathy/nanogpt">nanogpt</a> — 从梯度下降到完整训练，视频在 YouTube</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/huggingface/course">Language Model Workshop</a> — Hugging Face 官方课程</li>
+<li><a target="_blank" rel="noopener" href="https://www.coursera.org/specializations/deep-learning">Deep Learning Specialization (Coursera)</a> — Andrew Ng，系统学习 DL</li>
+</ul>
+<p><strong>4. Transformer 进阶论文（精读）</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You Need (2017)</a> — Transformer 原始论文</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2104.09864">RoPE (2021)</a> — Rotary Position Embedding</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2108.12409">ALiBi (2022)</a> — Attention with Linear Biases</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.17453">YaRN (2023)</a> — 长上下文扩展</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.14135">FlashAttention (2022)</a> — 高效 Attention</li>
+</ul>
+<h4 id="📝-今日实践任务"><a href="#📝-今日实践任务" class="headerlink" title="📝 今日实践任务"></a>📝 今日实践任务</h4><ul>
+<li>用 Python 手写一个最小版 SelfAttention（不用框架）</li>
+<li>跑一遍 Karpathy 的 nanogpt training，观察 loss 曲线</li>
+</ul>
+<hr>
+<h3 id="🔴-P0：模型量化与压缩技术"><a href="#🔴-P0：模型量化与压缩技术" class="headerlink" title="🔴 P0：模型量化与压缩技术"></a>🔴 P0：模型量化与压缩技术</h3><h4 id="学习目标-1"><a href="#学习目标-1" class="headerlink" title="学习目标"></a>学习目标</h4><ul>
+<li>理解线性量化、非对称量化的数学原理</li>
+<li>掌握 GGUF（k-quants）、GPTQ、AWX、MLX 四种格式的适用场景</li>
+<li>理解量化级别（2&#x2F;4&#x2F;6&#x2F;8-bit）与 Perplexity 损失的关系</li>
+</ul>
+<h4 id="推荐资源（按学习顺序）-1"><a href="#推荐资源（按学习顺序）-1" class="headerlink" title="推荐资源（按学习顺序）"></a>推荐资源（按学习顺序）</h4><p><strong>1. 入门理解量化概念</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/main/model_quantization">Model Quantization (HuggingFace Blog)</a> — HF 官方文档，概念清晰</li>
+<li><a target="_blank" rel="noopener" href="https://thegradient.pub/a-beginner-friendly-guide-on-quantization-of-neural-networks/">What is Quantization? (The Gradient)</a> — 中文友好，图解多</li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=4fAKByY3nWI">Quantization Explained (YouTube)</a> — Daniel Bourke 出品，可视化好</li>
+</ul>
+<p><strong>2. GGUF &#x2F; k-quants 详解（重点）</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp/blob/master/examples/main/README.md">llama.cpp GGUf Format</a> — GGUF 格式说明</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp/blob/master/ggml/docs/quantization.md">GGML Quantization Guide</a> — k-quants 级别说明</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/blog/ggml-gguf-llama">Understanding GGUF Quantization (HuggingFace Blog)</a> — 解释 Q4_K_M、Q5_K_S 等命名规则</li>
+</ul>
+<p><strong>量化级别速查表：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INT8    →   精度损失最小，文件较大（~10GB for 70B）</span><br><span class="line">FP8     →   NVIDIA GPU 友好，Mac MLX 支持好</span><br><span class="line">AWQ-4bit→   Activation-aware Quantization, 适合 NVIDIA/AMD GPU</span><br><span class="line">GPTQ-4bit → INT4，NVIDIA CUDA 生态首选</span><br><span class="line">GGUF-Q4_K_M → llama.cpp/Mac MLX 推荐，性价比最优</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. Perplexity vs Quantization Benchmark</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://chat.lmsys.org/?weight_precision">LMSYS Chatbot Arena - Weight Precision</a> — 不同量化级别的模型对比</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">HuggingFace Open LLM Leaderboard</a> — 量化模型 benchmark</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/lm-sys/FastChat/blob/main/docs/benchmark.md">Quantization Benchmark (GitHub - lm-sys)</a></li>
+</ul>
+<p><strong>4. KV Cache 量化（进阶）</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ml-explore.github.io/mlx/build/html/examples/kv_cache_quantization.html">KV Cache Quantization (MLX Blog)</a> — MLX 官方 KV Cache 量化示例</li>
+<li><a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/quantization/fp8.html">FP8 KV-Cache in vLLM</a> — vLLM FP8 KV Cache</li>
+</ul>
+<h4 id="📝-今日实践任务-1"><a href="#📝-今日实践任务-1" class="headerlink" title="📝 今日实践任务"></a>📝 今日实践任务</h4><ul>
+<li>在 HuggingFace 上下载同一个模型的不同量化版本（Q4_K_M vs Q8_0），对比文件大小和推理速度</li>
+<li>用 llama.cpp 的 <code>llama-bench</code> 工具跑不同量化级别的 benchmark</li>
+</ul>
+<hr>
+<h3 id="🟡-P1：推理引擎底层（vLLM-MLX-llama-cpp）"><a href="#🟡-P1：推理引擎底层（vLLM-MLX-llama-cpp）" class="headerlink" title="🟡 P1：推理引擎底层（vLLM &#x2F; MLX &#x2F; llama.cpp）"></a>🟡 P1：推理引擎底层（vLLM &#x2F; MLX &#x2F; llama.cpp）</h3><h4 id="学习目标-2"><a href="#学习目标-2" class="headerlink" title="学习目标"></a>学习目标</h4><ul>
+<li>理解 PagedAttention、连续批处理（Continuous Batching）、推测解码</li>
+<li>vLLM vs llama.cpp 的适用场景和性能权衡</li>
+<li>Mac（MLX）上的部署优化策略</li>
+</ul>
+<h4 id="推荐资源"><a href="#推荐资源" class="headerlink" title="推荐资源"></a>推荐资源</h4><p><strong>1. vLLM 核心机制</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.06180">vLLM Paper (PagedAttention)</a> — 原始论文，理解 PagedAttention</li>
+<li><a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/">vLLM Documentation</a> — 官方文档，API + 配置详解</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm/tree/main/examples">vLLM Tutorials (GitHub)</a> — 官方示例</li>
+</ul>
+<p><strong>2. MLX Framework (Apple Silicon)</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ml-explore.github.io/mlx/build/html/index.html">MLX Official Documentation</a> — Apple MLX 官方文档</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ml-explore/mlx-examples/tree/main/llm">MLX Examples - LLM Inference</a> — MLX LLM 推理示例</li>
+<li><a target="_blank" rel="noopener" href="https://ml-explore.github.io/mlx/build/html/usage/performance.html">MLX vs PyTorch Comparison</a> — 性能对比</li>
+<li><a target="_blank" rel="noopener" href="https://ml-explore.github.io/mlx/blog/2024/01/llm.html">MLX Blog - LLM Inference</a> — LLM 推理优化</li>
+</ul>
+<p><strong>3. llama.cpp 底层</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp">llama.cpp Documentation</a> — 项目文档</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp/blob/master/examples/speculative/README.md">Speculative Decoding with llama.cpp</a> — 推测解码</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp/discussions">Continuous Batching in llama.cpp</a> — 社区讨论</li>
+</ul>
+<p><strong>4. vLLM vs llama.cpp 对比</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/serving/faqs.html">When to use which? (vLLM FAQ)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ggerganov/llama.cpp/issues?q=is:issue+vLLM">Benchmark: vLLM vs llama.cpp</a> — 社区 benchmark</li>
+</ul>
+<h4 id="📝-今日实践任务-2"><a href="#📝-今日实践任务-2" class="headerlink" title="📝 今日实践任务"></a>📝 今日实践任务</h4><ul>
+<li>Mac 上安装 MLX，跑一个 Q4_K_M 模型的推理 benchmark（对比 LM Studio）</li>
+<li>Docker 里部署 vLLM，跑同一个模型，对比吞吐量</li>
+</ul>
+<hr>
+<h3 id="🟡-P1：Agent-工程化（熔断机制-死循环）"><a href="#🟡-P1：Agent-工程化（熔断机制-死循环）" class="headerlink" title="🟡 P1：Agent 工程化（熔断机制 &#x2F; 死循环）"></a>🟡 P1：Agent 工程化（熔断机制 &#x2F; 死循环）</h3><h4 id="学习目标-3"><a href="#学习目标-3" class="headerlink" title="学习目标"></a>学习目标</h4><ul>
+<li>理解 Agent 常见故障模式（重复执行、无限递归等）</li>
+<li>实现有效的熔断&#x2F;超时机制</li>
+<li>参考业界最佳实践解决 Hermes Agent 的死循环问题</li>
+</ul>
+<h4 id="推荐资源-1"><a href="#推荐资源-1" class="headerlink" title="推荐资源"></a>推荐资源</h4><p><strong>1. Agent 故障分析论文&#x2F;文章</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2308.03688">AgentBench: Evaluating LLMs as Agents</a> — Agent 评测基准</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in LLMs</a> — ReAct 模式原始论文</li>
+<li><a target="_blank" rel="noopener" href="https://www.anthropic.com/research/building-effective-agents">Circuit Breaker Pattern for AI Agents</a> — Anthropic 的 Agent 构建指南</li>
+</ul>
+<p><strong>2. 熔断机制实现方案</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://martinfowler.com/bliki/CircuitBreaker.html">Circuit Breaker Pattern (Martin Fowler)</a> — 经典熔断模式</li>
+<li><a target="_blank" rel="noopener" href="https://python.langchain.com/docs/modules/agents/concepts/">LangChain - Max Iterations</a> — LangChain 的迭代限制机制</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Significant-Gravitas/Auto-GPT/blob/master/src/auto_gpt/agent.py">AutoGPT - Loop Detection</a> — AutoGPT 的循环检测实现</li>
+</ul>
+<p><strong>3. Hermes Agent 熔断建议（基于分析）</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 核心思路：操作去重 + 结果变化检测 + 最大迭代限制</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AgentCircuitBreaker</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, max_iterations=<span class="number">10</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>.max_iterations = max_iterations</span><br><span class="line">        <span class="variable language_">self</span>.observed_states = &#123;&#125;  <span class="comment"># tool_name -&gt; last_result_hash</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">should_execute</span>(<span class="params">self, tool_name, args</span>):</span><br><span class="line">        <span class="comment"># 1. 检查是否超过最大迭代次数</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.count &gt; <span class="variable language_">self</span>.max_iterations:</span><br><span class="line">            <span class="keyword">raise</span> CircuitBreakerOpen(<span class="string">f&quot;Max iterations (<span class="subst">&#123;self.max_iterations&#125;</span>) reached&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 检查结果是否无变化（防重复执行）</span></span><br><span class="line">        current_result = <span class="built_in">hash</span>(<span class="built_in">str</span>(args))</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.observed_states.get(tool_name) == current_result:</span><br><span class="line">            <span class="keyword">raise</span> CircuitBreakerOpen(<span class="string">f&quot;Stale result detected for <span class="subst">&#123;tool_name&#125;</span>&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.observed_states[tool_name] = current_result</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;当执行了不同的操作时重置&quot;&quot;&quot;</span></span><br><span class="line">        <span class="variable language_">self</span>.observed_states.clear()</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键优化点（针对你的场景）：</strong></p>
+<ul>
+<li><strong>web_search 死循环</strong>：记录上次搜索结果摘要，如果连续2次结果相似度 &gt;95%，触发熔断</li>
+<li><strong>文件读取死循环</strong>：记录上次读取的 file path + offset，如果结果相同则熔断</li>
+<li><strong>通用策略</strong>：每个 tool call 设置独立计数器 + 全局 max_iterations</li>
+</ul>
+<h4 id="📝-今日实践任务-3"><a href="#📝-今日实践任务-3" class="headerlink" title="📝 今日实践任务"></a>📝 今日实践任务</h4><ul>
+<li>在 Hermes Agent 的 prompt 中加入熔断规则（写在 AGENTS.md&#x2F;SOUL.md）</li>
+<li>测试：故意让 Agent 重复执行同一个搜索，观察是否触发熔断</li>
+</ul>
+<hr>
+<h3 id="🟢-P2：AI-应用开发（文生图-浏览器自动化）"><a href="#🟢-P2：AI-应用开发（文生图-浏览器自动化）" class="headerlink" title="🟢 P2：AI 应用开发（文生图 &#x2F; 浏览器自动化）"></a>🟢 P2：AI 应用开发（文生图 &#x2F; 浏览器自动化）</h3><h4 id="推荐资源-2"><a href="#推荐资源-2" class="headerlink" title="推荐资源"></a>推荐资源</h4><p><strong>1. 本地文生图模型部署</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">Stable Diffusion WebUI (AUTOMATIC1111)</a> — 最流行的 SD WebUI</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/comfyanonymous/ComfyUI">ComfyUI</a> — 节点式 SD，适合工作流搭建</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/stabilityai/sdxl-turbo">SDXL Turbo</a> — 实时文生图，速度快</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/black-forest-labs/FLUX.1-schnell">FLUX.1 (Black-Forest-Labs)</a> — 最新开源文生图模型，速度快质量好</li>
+</ul>
+<p><strong>2. Chrome MCP &#x2F; 浏览器自动化</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/">Playwright Python</a> — Microsoft 出品的浏览器自动化库</li>
+<li><a target="_blank" rel="noopener" href="https://chromedevtools.github.io/devtools-protocol/">CDP Protocol (Chrome DevTools)</a> — Chrome 调试协议</li>
+<li><a target="_blank" rel="noopener" href="https://pptr.dev/">Puppeteer</a> — Node.js 浏览器自动化（适合小红书流程）</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/browser-use/browser-use">Browser-use (GitHub)</a> — LLM 驱动的浏览器自动化</li>
+</ul>
+<hr>
+<h2 id="三、推荐学习顺序（30天计划）"><a href="#三、推荐学习顺序（30天计划）" class="headerlink" title="三、推荐学习顺序（30天计划）"></a>三、推荐学习顺序（30天计划）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">第1周：LLM 底层原理入门</span><br><span class="line">├── Day 1-2: The Illustrated Transformer（读 + 做笔记）</span><br><span class="line">├── Day 3-4: minigpt / micrograd（跑代码，理解训练循环）</span><br><span class="line">├── Day 5-6: Attention is All You Need（精读论文 + Yannic Kilcher 解读视频）</span><br><span class="line">└── Day 7: 手写 SelfAttention + FFN（Python，不用框架）</span><br><span class="line"></span><br><span class="line">第2周：模型量化与压缩</span><br><span class="line">├── Day 8-9: HuggingFace Quantization Guide（概念）</span><br><span class="line">├── Day 10-11: GGUF k-quants 详解 + llama.cpp bench</span><br><span class="line">├── Day 12-13: GPTQ vs AWX vs GGUF（对比实验）</span><br><span class="line">└── Day 14: KV Cache 量化 + FP8</span><br><span class="line"></span><br><span class="line">第3周：推理引擎</span><br><span class="line">├── Day 15-17: vLLM PagedAttention（论文 + Docker部署）</span><br><span class="line">├── Day 18-20: MLX Framework（Mac上跑通 LLM推理）</span><br><span class="line">├── Day 21: llama.cpp 源码阅读（核心部分）</span><br><span class="line"></span><br><span class="line">第4周：Agent 工程化</span><br><span class="line">├── Day 22-23: ReAct + Function Calling（实现一个简单Agent）</span><br><span class="line">├── Day 24-25: Circuit Breaker Pattern（实现熔断机制）</span><br><span class="line">├── Day 26-27: MCP Protocol + Tool Use</span><br><span class="line">└── Day 28-30: 综合实战（搭建一个完整 Agent workflow）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、补充资源清单"><a href="#四、补充资源清单" class="headerlink" title="四、补充资源清单"></a>四、补充资源清单</h2><h3 id="📚-博客-频道推荐"><a href="#📚-博客-频道推荐" class="headerlink" title="📚 博客 &amp; 频道推荐"></a>📚 博客 &amp; 频道推荐</h3><ul>
+<li><strong>3Blue1Brown</strong> — YouTube，数学可视化天花板</li>
+<li><strong>Yannic Kilcher</strong> — YouTube，LLM 论文解读</li>
+<li><strong>lilianweng.github.io</strong> — OpenAI 前研究员博客，LLM 系列</li>
+<li><strong>MLabonne’s Blog</strong> — HuggingFace 工程师，量化 + LLM 方向</li>
+<li><strong>Jay Alammar’s Blog</strong> — The Illustrated 系列作者</li>
+</ul>
+<h3 id="🎓-课程"><a href="#🎓-课程" class="headerlink" title="🎓 课程"></a>🎓 课程</h3><ul>
+<li><strong>Coursera - Deep Learning Specialization</strong> — Andrew Ng（系统基础）</li>
+<li><strong>HuggingFace Course (免费)</strong> — 实战导向，从零到部署</li>
+<li><strong>Fast.ai - Practical Deep Learning</strong> — 代码优先</li>
+</ul>
+<h3 id="🏆-Benchmark-社区"><a href="#🏆-Benchmark-社区" class="headerlink" title="🏆 Benchmark &amp; 社区"></a>🏆 Benchmark &amp; 社区</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">Open LLM Leaderboard</a> — HuggingFace</li>
+<li><a target="_blank" rel="noopener" href="https://chat.lmsys.org/">Chatbot Arena</a> — LMSYS 模型对比</li>
+<li>[llama.cpp Discord](<a target="_blank" rel="noopener" href="https://discord.gg/">https://discord.gg/</a> llama.cpp) — 活跃社区，提问快</li>
+</ul>
+<hr>
+<h2 id="五、总结：你的核心优势与改进方向"><a href="#五、总结：你的核心优势与改进方向" class="headerlink" title="五、总结：你的核心优势与改进方向"></a>五、总结：你的核心优势与改进方向</h2><h3 id="✅-已做得好的"><a href="#✅-已做得好的" class="headerlink" title="✅ 已做得好的"></a>✅ 已做得好的</h3><ul>
+<li><strong>问题意识强</strong> — 能准确识别知识盲区（Transformer黑盒、量化困惑等）</li>
+<li><strong>学习框架清晰</strong> — 5&#x2F;05 的问题清单本身就是很好的 learning roadmap</li>
+<li><strong>工具对比意识</strong> — vMLX&#x2F;LM Studio&#x2F;oMLX 的对比思维方向正确</li>
+</ul>
+<h3 id="🎯-下一步重点"><a href="#🎯-下一步重点" class="headerlink" title="🎯 下一步重点"></a>🎯 下一步重点</h3><ol>
+<li><strong>优先攻克 Transformer 底层</strong> — 这是理解一切 LLM 技术的基础，建议从 The Illustrated Transformer + nanogpt 开始</li>
+<li><strong>量化知识体系化</strong> — 建立一个 GGUF&#x2F;GPTQ&#x2F;AWX&#x2F;MLX 对比表，边学边记录</li>
+<li><strong>实践驱动</strong> — 每个理论知识点配一个动手实验（写代码、跑 benchmark）</li>
+<li><strong>Agent 熔断</strong> — 这是当前最影响体验的问题，建议优先加到 AGENTS.md</li>
+</ol>
+<hr>
+<p><em>这份资料基于你近一周的实际问题生成，建议结合 SOUL.md 中的学习路线图一起使用。每完成一个模块后在 daily_Q 中记录进展和心得。</em></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/claude-code-source/">Claude-Code</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E5%AD%A6%E4%B9%A0%E6%96%B9%E5%90%91%E5%88%86%E6%9E%90%E4%B8%8E%E8%B5%84%E6%96%99%E6%B1%87%E6%80%BB"><span class="toc-number">1.</span> <span class="toc-text">个人学习方向分析与资料汇总</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%BF%91%E4%B8%80%E5%91%A8%E9%97%AE%E9%A2%98%E7%BB%9F%E8%AE%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">一、近一周问题统计与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%97%AE%E9%A2%98%E9%A2%86%E5%9F%9F%E5%88%86%E5%B8%83%EF%BC%88%E5%85%B1%E7%BA%A635-%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 问题领域分布（共约35+个问题）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%85%B3%E9%94%AE%E5%8F%91%E7%8E%B0"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 关键发现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%88%86%E9%A2%86%E5%9F%9F%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84%E4%B8%8E%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E4%BC%98%E5%85%88%E7%BA%A7%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">二、分领域学习路径与资源（按优先级）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B4-P0%EF%BC%9ALLM-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E4%B8%8E-Transformer-%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">🔴 P0：LLM 底层原理与 Transformer 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%89"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">推荐资源（按学习顺序）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B4-P0%EF%BC%9A%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E4%B8%8E%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF"><span class="toc-number">1.2.2.</span> <span class="toc-text">🔴 P0：模型量化与压缩技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%89%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%89-1"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">推荐资源（按学习顺序）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-1"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-P1%EF%BC%9A%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E5%BA%95%E5%B1%82%EF%BC%88vLLM-MLX-llama-cpp%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">🟡 P1：推理引擎底层（vLLM &#x2F; MLX &#x2F; llama.cpp）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-2"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">推荐资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-2"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-P1%EF%BC%9AAgent-%E5%B7%A5%E7%A8%8B%E5%8C%96%EF%BC%88%E7%86%94%E6%96%AD%E6%9C%BA%E5%88%B6-%E6%AD%BB%E5%BE%AA%E7%8E%AF%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">🟡 P1：Agent 工程化（熔断机制 &#x2F; 死循环）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E7%9B%AE%E6%A0%87-3"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">学习目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90-1"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">推荐资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9D-%E4%BB%8A%E6%97%A5%E5%AE%9E%E8%B7%B5%E4%BB%BB%E5%8A%A1-3"><span class="toc-number">1.2.4.3.</span> <span class="toc-text">📝 今日实践任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A2-P2%EF%BC%9AAI-%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%EF%BC%88%E6%96%87%E7%94%9F%E5%9B%BE-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">🟢 P2：AI 应用开发（文生图 &#x2F; 浏览器自动化）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E8%B5%84%E6%BA%90-2"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">推荐资源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%8E%A8%E8%8D%90%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F%EF%BC%8830%E5%A4%A9%E8%AE%A1%E5%88%92%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">三、推荐学习顺序（30天计划）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E8%A1%A5%E5%85%85%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95"><span class="toc-number">1.4.</span> <span class="toc-text">四、补充资源清单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%9A-%E5%8D%9A%E5%AE%A2-%E9%A2%91%E9%81%93%E6%8E%A8%E8%8D%90"><span class="toc-number">1.4.1.</span> <span class="toc-text">📚 博客 &amp; 频道推荐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%93-%E8%AF%BE%E7%A8%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">🎓 课程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8F%86-Benchmark-%E7%A4%BE%E5%8C%BA"><span class="toc-number">1.4.3.</span> <span class="toc-text">🏆 Benchmark &amp; 社区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93%EF%BC%9A%E4%BD%A0%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E4%B8%8E%E6%94%B9%E8%BF%9B%E6%96%B9%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">五、总结：你的核心优势与改进方向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%B7%B2%E5%81%9A%E5%BE%97%E5%A5%BD%E7%9A%84"><span class="toc-number">1.5.1.</span> <span class="toc-text">✅ 已做得好的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8E%AF-%E4%B8%8B%E4%B8%80%E6%AD%A5%E9%87%8D%E7%82%B9"><span class="toc-number">1.5.2.</span> <span class="toc-text">🎯 下一步重点</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/07/learn-0507/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&text=近期学习方向"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&is_video=false&description=近期学习方向"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=近期学习方向&body=Check out this article: https://yuanxujia8090.github.io/2026/05/07/learn-0507/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&title=近期学习方向"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&name=近期学习方向&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/07/learn-0507/&t=近期学习方向"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2026
+    袁旭佳(Aaron)
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
