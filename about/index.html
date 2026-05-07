@@ -6,13 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta property="og:type" content="website">
+    <meta name="description" content="袁旭佳的简历个人信息 袁旭佳 &#x2F; 男 &#x2F; 1988 毕业于浙江理工大学 工作年限：10 年 + 期望城市：北京 邮箱：496065812@qq.com 手机：13691513508 微信：yuanxujia   工作经历美团 (2017 年 8 月 ~ 至今)闪购业务 (2024.01 ~ 至今) | 技术主 R核心职责：  负责用户端多渠道（小程序、H5、鸿蒙）技术建设，统筹">
+<meta property="og:type" content="website">
 <meta property="og:title" content="袁旭佳">
 <meta property="og:url" content="https://yuanxujia8090.github.io/about/index.html">
 <meta property="og:site_name" content="袁旭佳(Aaron)的博客">
+<meta property="og:description" content="袁旭佳的简历个人信息 袁旭佳 &#x2F; 男 &#x2F; 1988 毕业于浙江理工大学 工作年限：10 年 + 期望城市：北京 邮箱：496065812@qq.com 手机：13691513508 微信：yuanxujia   工作经历美团 (2017 年 8 月 ~ 至今)闪购业务 (2024.01 ~ 至今) | 技术主 R核心职责：  负责用户端多渠道（小程序、H5、鸿蒙）技术建设，统筹">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-03-31T12:10:50.000Z">
-<meta property="article:modified_time" content="2026-03-31T17:43:03.527Z">
+<meta property="article:modified_time" content="2026-05-07T06:22:37.095Z">
 <meta property="article:author" content="袁旭佳(Aaron)">
 <meta property="article:tag" content="袁旭佳、Aaron、前端开发、web developer">
 <meta name="twitter:card" content="summary">
@@ -95,7 +97,293 @@
 
   <div class="content" itemprop="articleBody">
       
-          
+          <h1 id="袁旭佳的简历"><a href="#袁旭佳的简历" class="headerlink" title="袁旭佳的简历"></a>袁旭佳的简历</h1><h2 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h2><ul>
+<li>袁旭佳 &#x2F; 男 &#x2F; 1988</li>
+<li>毕业于浙江理工大学</li>
+<li>工作年限：10 年 +</li>
+<li>期望城市：北京</li>
+<li>邮箱：<a href="mailto:&#52;&#x39;&#54;&#48;&#x36;&#53;&#56;&#49;&#x32;&#x40;&#113;&#x71;&#x2e;&#99;&#111;&#x6d;">496065812@qq.com</a></li>
+<li>手机：13691513508</li>
+<li>微信：yuanxujia</li>
+</ul>
+<hr>
+<h2 id="工作经历"><a href="#工作经历" class="headerlink" title="工作经历"></a>工作经历</h2><h3 id="美团-2017-年-8-月-至今"><a href="#美团-2017-年-8-月-至今" class="headerlink" title="美团 (2017 年 8 月 ~ 至今)"></a>美团 (2017 年 8 月 ~ 至今)</h3><h4 id="闪购业务-2024-01-至今-技术主-R"><a href="#闪购业务-2024-01-至今-技术主-R" class="headerlink" title="闪购业务 (2024.01 ~ 至今) | 技术主 R"></a>闪购业务 (2024.01 ~ 至今) | 技术主 R</h4><p><strong>核心职责：</strong></p>
+<ul>
+<li>负责用户端多渠道（小程序、H5、鸿蒙）技术建设，统筹商详页性能优化和工程质量治理</li>
+<li>主导一码多端小程序同构项目，推进核心链路跨端能力收敛</li>
+<li>支撑店内日常研发需求，承担新人培养和技术招聘工作</li>
+</ul>
+<hr>
+<p><strong>项目一：商详页性能优化 (主 R)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>商详页作为导购链路关键环节，2025 年 2 月 RCF 均值仅 61.9 分，低端机 47.8 分</li>
+<li>性能指标在集团内相对落后（低于外卖、医药、小象等业务同类页面）</li>
+<li>工程质量存在历史债务：视图层级复杂、渲染流程散乱、数据冗余</li>
+<li>Q3-Q4 设计主导的竞品对标带来额外性能压力</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>商详页 RCF 从 61.9 提升至 75+，低端机达到 68+</li>
+<li>竞品对标中实现高中端机 Beat 竞对，低端机 Meet 竞对</li>
+<li>在不影响需求迭代的前提下完成工程质量治理</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>性能优化策略：</strong> 抓主要矛盾，通过高频试错理解指标&#x2F;问题，将有限资源投在 ROI 较高的策略上</li>
+<li><strong>渲染流程重构：</strong> 从多层级数据透传 + 异步渲染，改为单层级通信 + 三级渲染（骨架 - 预渲染 - 最终渲染）+ 同步直出</li>
+<li><strong>服务端接口优化：</strong> 落地首屏独立渲染，解决主接口耗时长问题</li>
+<li><strong>工程质量治理：</strong> 跟随需求迭代 + 版本回归方式，分层逐步完成页面层级优化、渲染流程收口、组件规范化、冗余数据删减</li>
+<li><strong>竞品对标专项：</strong> 完成商详首屏渲染接口拆分&amp;页面数据重组，解决回包体积大问题</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>RCF 提升：</strong> 从 61.9 → 79.3（12 月末 80+），提升 17.4 分；低端机从 47.8 → 68.9，提升 21 分</li>
+<li><strong>竞品对标：</strong> 高中端机 Beat 竞对，低端机 Meet 竞对</li>
+<li><strong>接口性能：</strong> 首屏依赖接口端到端 AVG 从 458ms → 320ms，降低 30%</li>
+<li><strong>工程质量：</strong> 完成页面层级优化、渲染流程收口、组件规范化、冗余数据删减，历史债务基本清零</li>
+<li><strong>业务影响：</strong> 商家页 tab 加载实时性改造后，推荐 tab CXR +1.42%，订单量 +1.40%</li>
+</ul>
+<p><strong>亮点：</strong> 通过快速试错 + 小步快跑探索出的优化策略大多行之有效，未在错误的方向上浪费时间</p>
+<hr>
+<p><strong>项目二：小程序同构项目 (协同负责人)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>店内存在小程序、H5、鸿蒙等多端代码，维护成本高</li>
+<li>核心链路页面在双端存在 20+ 处差异，质量问题难以收敛</li>
+<li>MSC（美团自研动态渲染框架）改造为同构奠定基础</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>2024 年实现核心链路同构覆盖率达到 100%</li>
+<li>4 月完成购物车收敛改造，8 月完成频道&amp;店内页面同构</li>
+<li>对齐双端差异，下线无流量需求</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>技术选型：</strong> 分而治之，Mach 部分采用局部模板同构，MSC 部分采用整体页面同构</li>
+<li><strong>前置改造：</strong> 优先完成购物车 MSC 改造，同步下线 6 个无流量需求，对齐 20 处双端差异</li>
+<li><strong>基建建设：</strong> 完成 MSC 拆包开发，为小程序同构分包奠定基础</li>
+<li><strong>渐进式推进：</strong> 先完成新版订单详情 + 售后 H5 同构上线，再推全首页、果蔬频道页、频道搜小程序同构</li>
+<li><strong>风险控制：</strong> 商家页完成重构&amp;提测，缓解同构到小程序体积&amp;性能风险</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>同构覆盖：</strong> 首页、果蔬频道页、频道搜小程序同构已推全；新版订单详情 + 售后 H5 同构已上线（灰度中）</li>
+<li><strong>差异对齐：</strong> 购物车完成 MSC 改造，同步下线 6 个无流量需求，对齐 20 处双端差异</li>
+<li><strong>业务效果：</strong><ul>
+<li>频道搜同构后，曝光转化&amp;曝光点击率小幅度波动</li>
+<li>首页&amp;频道页同构后，CXR 实验期间正负波动，变化不明显</li>
+</ul>
+</li>
+</ul>
+<p><strong>暗点：</strong> 受业务需求压力&amp;核心人员变动影响，项目延期至明年 3 月；MSC 部分性能、体积风险仍未解除</p>
+<hr>
+<p><strong>业务成果汇总：</strong></p>
+<ul>
+<li>名酒馆集合店研发：北京试点门店周实付 GMV 24.4 万，3C 手机集合店 7 城周销售额 487 万</li>
+<li>全年累计完成 38 次功能改动上线，无项目 delay，无 E 级以上事故</li>
+</ul>
+<hr>
+<h4 id="优选业务-2020-09-2022-09-销售-CRM-地图业务主-R"><a href="#优选业务-2020-09-2022-09-销售-CRM-地图业务主-R" class="headerlink" title="优选业务 (2020.09 ~ 2022.09) | 销售 CRM 地图业务主 R"></a>优选业务 (2020.09 ~ 2022.09) | 销售 CRM 地图业务主 R</h4><p><strong>核心职责：</strong></p>
+<ul>
+<li>负责销售 CRM 系统直营方向业务基础能力和平台能力建设</li>
+<li>推动架构演进，建设可复用组件物料和 SDK</li>
+</ul>
+<hr>
+<p><strong>项目一：架构演进与性能优化 (主 R)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>项目构建耗时平均 30 分钟，严重影响上线效率</li>
+<li>地图能力模块已应用在 8 个不同业务模块中，模块间高度耦合</li>
+<li>缺乏可复用业务组件，新增页面模块研发成本高</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>构建耗时从 30 分钟降至 3 分钟内（对标团长增长项目）</li>
+<li>建设 Map X SDK，解决 8 个业务模块地图能力耦合问题</li>
+<li>沉淀销售 CRM 业务组件和通用 UI 组件</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>构建优化：</strong> 使用 speed-measure 分析工具定位问题，通过 Webpack 配置减少第三方插件参与构建</li>
+<li><strong>多线程编译：</strong> 利用多线程并行编译 TypeScript，提升编译速度</li>
+<li><strong>Map X SDK 建设：</strong><ul>
+<li>调研内部（物流前端、快驴仓配、配送终端、外卖商家）和外部（leaflet-geoman、高德地图）地图场景</li>
+<li>实现图形绘制能力（split、cut），解决异形蜂窝边界调整难题</li>
+<li>独立封装为 SDK，支持跨工程复用</li>
+</ul>
+</li>
+<li><strong>组件沉淀：</strong> 建设销售 CRM 业务组件、通用 UI 组件</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>构建性能：</strong> 项目构建耗时从 30 分钟降至 3 分钟内，提升 90%</li>
+<li><strong>Map X SDK：</strong><ul>
+<li>v0.1.0 实现图形绘制能力，边界调整操作节省 10% 耗时</li>
+<li>v1.0 实现地图组件物料积累，新业务复用节省 1PD 研发耗时</li>
+</ul>
+</li>
+<li><strong>工程质量：</strong> 解决 8 个业务模块地图能力耦合问题，模块职责清晰化</li>
+</ul>
+<hr>
+<p><strong>项目二：资源管理 - 作业效率提升专项 (主 R)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>地图能力模块每月执行 16000+ 次蜂窝编辑调整</li>
+<li>缺乏连续划分能力，相邻蜂窝边界调整需 9 个操作步骤</li>
+<li>校园蜂窝场景缺乏灵活的切割（Cut）、分割（Split）能力</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>作业区域划分流程效率提升 10%</li>
+<li>实现图形绘制能力，优化存量业务区域编辑体验</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>流程优化：</strong> 推动 PM 将多页操作改为单页完成，减少操作步骤</li>
+<li><strong>能力补齐：</strong> Map X SDK v0.1.0 优先实现 split、cut 图形绘制能力</li>
+<li><strong>产品策略：</strong> 与 PM 配合多次迭代，优化优先级为：操作效率 &gt; 用户体验 &gt; 能力补齐</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>作业效率：</strong> Map X v0.1.0 实现后，边界调整操作预计节省 10% 耗时</li>
+<li><strong>新业务提效：</strong> Map X v1.0 支持新业务复用，节省研发耗时 1PD</li>
+</ul>
+<hr>
+<p><strong>项目三：社区字典项目 V1.0 (负责人)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>美团用户总数 6 亿+，全国人口 14 亿+，大量优质社区未被覆盖</li>
+<li>采集人员无高清卫星地图，无法直观判断待采集区域内楼宇情况</li>
+<li>涉及 10 个功能模块、30+ 社区信息字典，协调 App 端、PC 管理端、地图审核平台 3 个团队</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>完成兰州试点 500 条有效社区信息采集</li>
+<li>建设卫星地图服务，支持采集端 App 和 PC 管理端</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>细粒度拆分：</strong> 将 10 个模块拆分为 15 个任务并分配到人，协调外部沟通让成员专注开发</li>
+<li><strong>数据协议统一：</strong> 联合后端优先约定接口出入参，采集端、后端、前端共用文档</li>
+<li><strong>卫星地图服务：</strong><ul>
+<li>谷歌卫星图：申请公司公网域名，通过香港建立转发服务（法务确认合规）</li>
+<li>腾讯卫星图：作为备用方案</li>
+</ul>
+</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>采集目标：</strong> 实际采集 517 条有效社区信息，超额完成 500 条目标</li>
+<li><strong>流程建设：</strong> 完成采集流程、信息管理流程、审核流程</li>
+<li><strong>服务落地：</strong> 卫星地图服务已应用在采集端 App 和 PC 管理端</li>
+</ul>
+<hr>
+<p><strong>项目四：直代模式落地 (核心成员)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>直代模式与直营网格站存在数据&amp;业务流程耦合问题</li>
+<li>127 个直代区县乡镇下沉覆盖率需达到 90%+</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>解决直代模式与直营网格站数据&amp;业务流程耦合问题</li>
+<li>形成标准 SOP，覆盖率达到目标</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>全链路落地：</strong> 联合上下游业务完成直代模式全链路实施方案</li>
+<li><strong>SOP 制定：</strong> 形成标准操作流程文档</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>下沉覆盖：</strong> 127 个直代区县乡镇下沉覆盖率达 91.20%（直营 92.15%，代理 91.78%）</li>
+<li><strong>SOP 沉淀：</strong> 形成标准 SOP，支持后续快速复制</li>
+</ul>
+<hr>
+<p><strong>团队与文化贡献：</strong></p>
+<ul>
+<li>建立第三方插件规范、Pull Request 规范</li>
+<li>线上无资损级事故（S9&#x3D;5000 元内&#x2F;S3&#x3D;5000-5 万&#x2F;S2&#x3D;5 万 -20 万）</li>
+<li>季度 PR comments 172 次（上季度 101 次），提升代码审查质量</li>
+<li>指导实习生、社招新人完成基础平台使用、H5 开发总结</li>
+</ul>
+<hr>
+<h4 id="支付业务-2017-06-2020-09-Hybrid-收银台前端开发"><a href="#支付业务-2017-06-2020-09-Hybrid-收银台前端开发" class="headerlink" title="支付业务 (2017.06 ~ 2020.09) | Hybrid 收银台前端开发"></a>支付业务 (2017.06 ~ 2020.09) | Hybrid 收银台前端开发</h4><p><strong>核心职责：</strong></p>
+<ul>
+<li>负责 Hybrid H5 端版本迭代和性能优化</li>
+<li>推动订单转化率对齐标准收银台</li>
+</ul>
+<hr>
+<p><strong>项目一：Hybrid 收银台转化率优化 (核心成员)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>Hybrid 收银台订单转化率与标准收银台差距较大</li>
+<li>外卖业务放量至 4%，日均 20-30 万单，对转化率要求更高</li>
+<li>Hybrid H5 侧存在桥成功率低、离线包命中率不足等问题</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>订单转化率与标准收银台差距缩小到 10~20BP 内波动</li>
+<li>外卖业务放量至 4%，日均 20-30 万单</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>数据分析驱动：</strong> 通过漏斗分析定位影响转化率的关键因素，AB 对照测试优化</li>
+<li><strong>桥成功率优化：</strong><ul>
+<li>发现桥并发调用耗时长问题，完成优化</li>
+<li>识别关键桥调用成功率偏低，针对性提升</li>
+</ul>
+</li>
+<li><strong>离线包命中率：</strong> 优化离线包机制，提升命中率</li>
+<li><strong>异常问题排查：</strong> 发现 iOS 端 Webview 被释放问题导致前端业务错误偏多（系统自身问题，暂时无法修复）</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>转化率对齐：</strong> 订单转化率高点时与标准收银台差距缩小到 10BP 以内</li>
+<li><strong>业务放量：</strong> 外卖业务放量至 4%，日均 20-30 万单</li>
+<li><strong>关键优化：</strong> 提升桥成功率 + 提升离线包命中率成为核心优化手段</li>
+</ul>
+<hr>
+<p><strong>项目二：版本迭代与质量保障 (主 R)</strong></p>
+<p><strong>背景（S）：</strong></p>
+<ul>
+<li>Hybrid H5 端需高频迭代支撑业务需求</li>
+<li>金融业务场景对项目质量要求极高</li>
+</ul>
+<p><strong>任务（T）：</strong></p>
+<ul>
+<li>支撑 Hybrid H5 版本迭代，保障上线质量</li>
+<li>形成稳定的敏捷流程</li>
+</ul>
+<p><strong>行动（A）：</strong></p>
+<ol>
+<li><strong>迭代模式演进：</strong><ul>
+<li>基于流程的敏捷流程：多干系人需求，由主 R 统一安排</li>
+<li>基于迭代的敏捷流程：H5 独立实现，单周交付</li>
+</ul>
+</li>
+<li><strong>质量保障：</strong><ul>
+<li>严格代码检查、执行自测</li>
+<li>提测阶段整理清楚影响范围，与 QA 做好沟通</li>
+</ul>
+</li>
+</ol>
+<p><strong>结果（R）：</strong></p>
+<ul>
+<li><strong>版本迭代：</strong> 支撑 Hybrid H5 版本迭代 22 次，个人千行 bug 率 0.02（低于目标 0.04）</li>
+<li><strong>上线次数：</strong> 主导上线 36 次，S9 级以上事故为零</li>
+<li><strong>敏捷流程：</strong> 形成两种稳定的敏捷流程，支持不同场景下的快速迭代</li>
+</ul>
+<hr>
+<p><strong>团队贡献：</strong></p>
+<ul>
+<li>负责团队建设，面试 33 人次</li>
+<li>培养新人 2 人，新人在职期间上线无事故</li>
+</ul>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><p><strong>框架与语言：</strong> Vue, React, JavaScript, TypeScript<br><strong>工程化：</strong> Webpack, Gulp<br><strong>工具链：</strong> Git, ESLint  </p>
+
         
   </div>
 </article>
