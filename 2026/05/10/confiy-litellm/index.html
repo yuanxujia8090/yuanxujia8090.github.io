@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文档指导你通过 Docker 运行 LiteLLM 代理服务，将 Claude Code 的请求转发到本地的 oMLX 模型（或任何 OpenAI 兼容的本地服务）。  准备工作：创建项目目录1mkdir -p ~&#x2F;litellm-docker &amp;&amp; cd ~&#x2F;litellm-docker   ⚙️ 步骤一：创建配置文件1. 创建 docker-compose.yml123456">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型">
+<meta property="og:url" content="https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/index.html">
+<meta property="og:site_name" content="袁旭佳(Aaron)的博客">
+<meta property="og:description" content="本文档指导你通过 Docker 运行 LiteLLM 代理服务，将 Claude Code 的请求转发到本地的 oMLX 模型（或任何 OpenAI 兼容的本地服务）。  准备工作：创建项目目录1mkdir -p ~&#x2F;litellm-docker &amp;&amp; cd ~&#x2F;litellm-docker   ⚙️ 步骤一：创建配置文件1. 创建 docker-compose.yml123456">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-10T11:00:01.000Z">
+<meta property="article:modified_time" content="2026-05-10T11:03:24.941Z">
+<meta property="article:author" content="袁旭佳(Aaron)">
+<meta property="article:tag" content="Hermes Agent">
+<meta property="article:tag" content="LiteLLM">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/05/07/learn-0507/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&text=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&is_video=false&description=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型&body=Check out this article: https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&name=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&t=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%EF%BC%9A%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">准备工作：创建项目目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">⚙️ 步骤一：创建配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA-docker-compose-yml"><span class="toc-number">2.1.</span> <span class="toc-text">1. 创建 docker-compose.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA-litellm-config-yaml"><span class="toc-number">2.2.</span> <span class="toc-text">2. 创建 litellm_config.yaml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%80-%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9A%E5%90%AF%E5%8A%A8-LiteLLM-%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">🚀 步骤二：启动 LiteLLM 服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A1-%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%9A%E9%85%8D%E7%BD%AE-Claude-Code"><span class="toc-number">4.</span> <span class="toc-text">⚡ 步骤三：配置 Claude Code</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%B8%B4%E6%97%B6%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%88%E9%80%82%E5%90%88%E5%BF%AB%E9%80%9F%E6%B5%8B%E8%AF%95%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">方式一：临时环境变量（适合快速测试）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%86%99%E5%85%A5-Claude-Code-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">方式二：写入 Claude Code 全局配置文件（一劳永逸）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%90%9B-%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%9A%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">🐛 步骤四：验证与测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%B5%8B%E8%AF%95LiteLLM-%E6%9C%8D%E5%8A%A1"><span class="toc-number">5.1.</span> <span class="toc-text">1.测试LiteLLM 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B%E8%B7%AF%E7%94%B1"><span class="toc-number">5.2.</span> <span class="toc-text">2. 测试模型路由</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%81-%E6%97%A5%E5%B8%B8%E7%BB%B4%E6%8A%A4"><span class="toc-number">6.</span> <span class="toc-text">## 🔁 日常维护</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">袁旭佳(Aaron)</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-05-10T11:00:01.000Z" class="dt-published" itemprop="datePublished">2026-05-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Hermes-Agent/" rel="tag">Hermes Agent</a>, <a class="p-category" href="/tags/LiteLLM/" rel="tag">LiteLLM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>本文档指导你通过 Docker 运行 LiteLLM 代理服务，将 Claude Code 的请求转发到本地的 oMLX 模型（或任何 OpenAI 兼容的本地服务）。</p>
+<hr>
+<h3 id="准备工作：创建项目目录"><a href="#准备工作：创建项目目录" class="headerlink" title="准备工作：创建项目目录"></a>准备工作：创建项目目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/litellm-docker &amp;&amp; cd ~/litellm-docker</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="⚙️-步骤一：创建配置文件"><a href="#⚙️-步骤一：创建配置文件" class="headerlink" title="⚙️ 步骤一：创建配置文件"></a>⚙️ 步骤一：创建配置文件</h3><h4 id="1-创建-docker-compose-yml"><a href="#1-创建-docker-compose-yml" class="headerlink" title="1. 创建 docker-compose.yml"></a>1. 创建 docker-compose.yml</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  litellm:</span><br><span class="line">    image: ghcr.io/berriai/litellm:main-latest</span><br><span class="line">    container_name: litellm</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;4000:4000&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - ./litellm_config.yaml:/app/config.yaml</span><br><span class="line">    command:</span><br><span class="line">      - &quot;--config&quot;</span><br><span class="line">      - &quot;/app/config.yaml&quot;</span><br><span class="line">      - &quot;--port&quot;</span><br><span class="line">      - &quot;4000&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="2-创建-litellm-config-yaml"><a href="#2-创建-litellm-config-yaml" class="headerlink" title="2. 创建 litellm_config.yaml"></a>2. 创建 litellm_config.yaml</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model_list:</span><br><span class="line">  - model_name: claude-3-haiku-20240307       # Claude Code 调用的模型名称</span><br><span class="line">    litellm_params:</span><br><span class="line">      model: openai/你的oMLX中的模型名          # 替换为你的实际模型名，例如 openai/Qwen2.5-7B</span><br><span class="line">      api_base: http://host.docker.internal:8050/v1   # oMLX 服务地址，端口根据实际情况修改</span><br><span class="line">      api_key: dummy-key-for-omlx              # 任意占位符</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>重要说明：</p>
+<ul>
+<li>model_name：可自定义，后续 Claude Code 通过 ANTHROPIC_MODEL 指定这个名字。</li>
+<li>model：格式 openai&#x2F;模型名，填写你在 oMLX 界面中看到的模型名称。</li>
+<li>api_base：host.docker.internal 是 Docker 访问宿主机的专用域名，端口需与 oMLX 设置一致（默认 8050）。</li>
+<li>api_key：任意字符串，本地服务不校验。</li>
+</ul>
+</blockquote>
+<h3 id="🚀-步骤二：启动-LiteLLM-服务"><a href="#🚀-步骤二：启动-LiteLLM-服务" class="headerlink" title="🚀 步骤二：启动 LiteLLM 服务"></a>🚀 步骤二：启动 LiteLLM 服务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+
+<p>查看日志确认启动成功：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose logs litellm</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看到 <code>Application startup complete.</code> 即表示正常。</p>
+</blockquote>
+<h3 id="⚡-步骤三：配置-Claude-Code"><a href="#⚡-步骤三：配置-Claude-Code" class="headerlink" title="⚡ 步骤三：配置 Claude Code"></a>⚡ 步骤三：配置 Claude Code</h3><h4 id="方式一：临时环境变量（适合快速测试）"><a href="#方式一：临时环境变量（适合快速测试）" class="headerlink" title="方式一：临时环境变量（适合快速测试）"></a>方式一：临时环境变量（适合快速测试）</h4><p>在<strong>要运行 Claude Code 的终端</strong>中执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export ANTHROPIC_BASE_URL=&quot;http://localhost:4000&quot;</span><br><span class="line">export ANTHROPIC_AUTH_TOKEN=&quot;sk-any-dummy-value&quot;</span><br><span class="line">export ANTHROPIC_MODEL=&quot;claude-3-haiku-20240307&quot;   # 必须与 litellm_config.yaml 中的 model_name 一致</span><br><span class="line">export API_TIMEOUT_MS=&quot;600000&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="方式二：写入-Claude-Code-全局配置文件（一劳永逸）"><a href="#方式二：写入-Claude-Code-全局配置文件（一劳永逸）" class="headerlink" title="方式二：写入 Claude Code 全局配置文件（一劳永逸）"></a>方式二：写入 Claude Code 全局配置文件（一劳永逸）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;env&quot;: &#123;</span><br><span class="line">    &quot;ANTHROPIC_BASE_URL&quot;: &quot;http://localhost:4000&quot;,</span><br><span class="line">    &quot;ANTHROPIC_AUTH_TOKEN&quot;: &quot;sk-any-dummy-value&quot;,</span><br><span class="line">    &quot;ANTHROPIC_MODEL&quot;: &quot;claude-3-haiku-20240307&quot;,</span><br><span class="line">    &quot;API_TIMEOUT_MS&quot;: &quot;600000&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="🐛-步骤四：验证与测试"><a href="#🐛-步骤四：验证与测试" class="headerlink" title="🐛 步骤四：验证与测试"></a>🐛 步骤四：验证与测试</h3><h4 id="1-测试LiteLLM-服务"><a href="#1-测试LiteLLM-服务" class="headerlink" title="1.测试LiteLLM 服务"></a>1.测试LiteLLM 服务</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:4000/health</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-测试模型路由"><a href="#2-测试模型路由" class="headerlink" title="2. 测试模型路由"></a>2. 测试模型路由</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:4000/chat/completions \</span><br><span class="line">  -H &quot;Content-Type: application/json&quot; \</span><br><span class="line">  -d &#x27;&#123;</span><br><span class="line">    &quot;model&quot;: &quot;claude-3-haiku-20240307&quot;,</span><br><span class="line">    &quot;messages&quot;: [&#123;&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello&quot;&#125;]</span><br><span class="line">  &#125;&#x27;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果收到你本地模型的回复，说明配置正确。</p>
+</blockquote>
+<h3 id="🔁-日常维护"><a href="#🔁-日常维护" class="headerlink" title="## 🔁 日常维护"></a>## 🔁 日常维护</h3><ul>
+<li><strong>修改配置后重启</strong>：<code>docker-compose restart</code></li>
+<li><strong>查看实时日志</strong>：<code>docker-compose logs -f litellm</code>    </li>
+<li><strong>停止服务</strong>：<code>docker-compose down</code>    </li>
+<li><strong>启动服务</strong>：<code>docker-compose up -d</code></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/claude-code-source/">Claude-Code</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%EF%BC%9A%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">准备工作：创建项目目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">⚙️ 步骤一：创建配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA-docker-compose-yml"><span class="toc-number">2.1.</span> <span class="toc-text">1. 创建 docker-compose.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BA-litellm-config-yaml"><span class="toc-number">2.2.</span> <span class="toc-text">2. 创建 litellm_config.yaml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%80-%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9A%E5%90%AF%E5%8A%A8-LiteLLM-%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">🚀 步骤二：启动 LiteLLM 服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A1-%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%9A%E9%85%8D%E7%BD%AE-Claude-Code"><span class="toc-number">4.</span> <span class="toc-text">⚡ 步骤三：配置 Claude Code</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E4%B8%B4%E6%97%B6%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%88%E9%80%82%E5%90%88%E5%BF%AB%E9%80%9F%E6%B5%8B%E8%AF%95%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">方式一：临时环境变量（适合快速测试）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%86%99%E5%85%A5-Claude-Code-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">方式二：写入 Claude Code 全局配置文件（一劳永逸）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%90%9B-%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%9A%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">🐛 步骤四：验证与测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%B5%8B%E8%AF%95LiteLLM-%E6%9C%8D%E5%8A%A1"><span class="toc-number">5.1.</span> <span class="toc-text">1.测试LiteLLM 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B%E8%B7%AF%E7%94%B1"><span class="toc-number">5.2.</span> <span class="toc-text">2. 测试模型路由</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%81-%E6%97%A5%E5%B8%B8%E7%BB%B4%E6%8A%A4"><span class="toc-number">6.</span> <span class="toc-text">## 🔁 日常维护</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&text=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&is_video=false&description=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型&body=Check out this article: https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&title=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&name=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/10/confiy-litellm/&t=使用 Docker 安装 LiteLLM 并配置 Claude Code 连接本地 oMLX 模型"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2026
+    袁旭佳(Aaron)
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
