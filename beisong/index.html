@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课文背诵助手</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f5f7fa;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.container {
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  font-size: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+/* Rule selection */
+.rule-selection {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rule-option {
+  flex: 1;
+  position: relative;
+}
+
+.rule-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.rule-option label {
+  display: block;
+  padding: 12px 16px;
+  border: 2px solid #e0e5ec;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  color: #5a6b7d;
+  transition: all 0.2s;
+  line-height: 1.5;
+}
+
+.rule-option label:hover {
+  border-color: #a0b4c8;
+}
+
+.rule-option input[type="radio"]:checked + label {
+  border-color: #4a90d9;
+  background: #e8f0fe;
+  color: #2c5aa0;
+  font-weight: 600;
+}
+
+/* Collapsible input */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.collapsible-header h2 {
+  font-size: 16px;
+  color: #34495e;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #7f8c8d;
+  transition: transform 0.3s;
+  padding: 4px 8px;
+}
+
+.toggle-btn.collapsed {
+  transform: rotate(-90deg);
+}
+
+.input-area {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.input-area.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+
+textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 16px;
+  border: 2px solid #e0e5ec;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #2c3e50;
+  resize: vertical;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+textarea:focus {
+  border-color: #4a90d9;
+}
+
+textarea::placeholder {
+  color: #b0bec5;
+}
+
+/* Display area */
+.display-area {
+  min-height: 120px;
+  padding: 8px 0;
+}
+
+.display-area h2 {
+  font-size: 16px;
+  color: #34495e;
+  margin-bottom: 12px;
+}
+
+.display-content {
+  font-size: 24px;
+  line-height: 2;
+  color: #2c3e50;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.display-content .masked {
+  color: #e74c3c;
+  font-weight: 600;
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.placeholder-text {
+  color: #b0bec5;
+  font-style: italic;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  color: #b0bec5;
+  padding: 40px 20px;
+}
+
+.empty-state p {
+  font-size: 15px;
+}
+
+/* [新增] 清空按钮样式 */
+.clear-btn {
+  background: #f5f7fa;
+  border: 1px solid #e0e5ec;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #5a6b7d;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-btn:hover {
+  background: #e8f0fe;
+  border-color: #4a90d9;
+  color: #2c5aa0;
+}
+
+.clear-btn:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>课文背诵助手</h1>
+
+  <!-- Rule Selection -->
+  <div class="card">
+    <div class="rule-selection">
+      <div class="rule-option">
+        <input type="radio" id="rule1" name="rule" value="1" checked>
+        <label for="rule1">规则1：隔1字替换为 _</label>
+      </div>
+      <div class="rule-option">
+        <input type="radio" id="rule2" name="rule" value="2">
+        <label for="rule2">规则2：隔2字替换为 __</label>
+      </div>
+      <div class="rule-option">
+        <input type="radio" id="rule3" name="rule" value="3">
+        <label for="rule3">规则3：句子按字替换为 _</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Area (collapsible) -->
+  <div class="card" id="inputCard">
+    <div class="collapsible-header" onclick="toggleInput()">
+      <h2>课文内容</h2>
+      <button class="toggle-btn" id="toggleBtn">▼</button>
+    </div>
+    <div class="input-area" id="inputArea">
+      <textarea id="textInput" placeholder="请输入课文内容..."></textarea>
+
+      <!-- [新增] 清空按钮 -->
+      <div style="text-align: right; margin-top: 8px;">
+        <button id="clearBtn" class="clear-btn">🗑️ 清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Display Area -->
+  <div class="card">
+    <div class="display-area" id="displayArea">
+      <h2>背诵展示</h2>
+      <div class="display-content" id="displayContent">
+        <span class="placeholder-text">输入课文内容后自动展示</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const textInput = document.getElementById('textInput');
+const displayContent = document.getElementById('displayContent');
+
+function isTextChar(ch) {
+  // 标点符号、换行符不参与替换计数
+  return !/[\s，。！？、；：""''（）【】《》,.!?;:\-\(\)\[\]{}]/.test(ch);
+}
+
+function applyRule1(text) {
+  // 隔1个字替换1个为 _（保留1、替换1、保留1、替换1...），标点不参与计数
+  let result = '';
+  let charCount = 0; // 只计文字字符
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (isTextChar(ch)) {
+      charCount++;
+      if (charCount % 2 === 0) {
+        result += '_';
+      } else {
+        result += ch;
+      }
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+function applyRule2(text) {
+  // 隔2个字把后面2个替换为 __（保留2、替换2、保留2、替换2...），标点不参与计数
+  let result = '';
+  let charCount = 0; // 只计文字字符
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (isTextChar(ch)) {
+      charCount++;
+      const pos = (charCount - 1) % 4; // 0,1,2,3 cycle
+      if (pos === 2 || pos === 3) {
+        result += '_';
+      } else {
+        result += ch;
+      }
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+function applyRule3(text) {
+  // [修正] 按所有标点（逗号、顿号、句号等）分割句子，间隔替换
+  // 补全中文句号。和感叹号！，确保所有分句都能正确交替
+  const sentenceSplitter = /([，,、；;。！？.!?!])/;
+
+  return text.split('\n').map(line => {
+    if (!line.trim()) return line;
+
+    let result = '';
+    let skipNext = false; // 是否跳过下一个分句（替换为 _）
+
+    const parts = line.split(sentenceSplitter);
+    // parts 格式: [分句1, 标点1, 分句2, 标点2, ...]
+
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+
+      // 如果是标点符号（分隔符），原样输出，并切换状态
+      if (sentenceSplitter.test(part)) {
+        result += part;
+        skipNext = !skipNext; // 标点后切换状态：保留 <-> 替换
+      } else {
+        // 这是分句内容（非空）
+        if (part.length === 0) continue; // 忽略分割产生的空字符串
+
+        if (skipNext) {
+          // 替换为 _，每个字一个 _
+          result += '_'.repeat(part.length);
+        } else {
+          // 保留原样
+          result += part;
+        }
+      }
+    }
+
+    return result;
+  }).join('\n');
+}
+
+function processText(text) {
+  if (!text.trim()) return '';
+
+  const rule = document.querySelector('input[name="rule"]:checked').value;
+  let maskedText;
+
+  if (rule === '1') {
+    maskedText = applyRule1(text);
+  } else if (rule === '2') {
+    maskedText = applyRule2(text);
+  } else if (rule === '3') {
+    maskedText = applyRule3(text);
+  }
+
+  // Highlight masked characters
+  let html = '';
+  for (let i = 0; i < maskedText.length; i++) {
+    const ch = maskedText[i];
+    if (ch === '_') {
+      html += '<span class="masked">_</span>';
+    } else {
+      html += escapeHtml(ch);
+    }
+  }
+
+  return html;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function updateDisplay() {
+  const text = textInput.value;
+  if (!text.trim()) {
+    displayContent.innerHTML = '<span class="placeholder-text">输入课文内容后自动展示</span>';
+    return;
+  }
+
+  const html = processText(text);
+  displayContent.innerHTML = html;
+}
+
+function toggleInput() {
+  const inputArea = document.getElementById('inputArea');
+  const toggleBtn = document.getElementById('toggleBtn');
+
+  if (inputArea.classList.contains('collapsed')) {
+    inputArea.classList.remove('collapsed');
+    toggleBtn.classList.remove('collapsed');
+  } else {
+    inputArea.classList.add('collapsed');
+    toggleBtn.classList.add('collapsed');
+  }
+}
+
+// Event listeners
+textInput.addEventListener('input', updateDisplay);
+document.querySelectorAll('input[name="rule"]').forEach(radio => {
+  radio.addEventListener('change', updateDisplay);
+});
+
+// Set initial max-height for animation
+window.addEventListener('load', () => {
+  const inputArea = document.getElementById('inputArea');
+  inputArea.style.maxHeight = inputArea.scrollHeight + 'px';
+});
+
+window.addEventListener('resize', () => {
+  const inputArea = document.getElementById('inputArea');
+  if (!inputArea.classList.contains('collapsed')) {
+    inputArea.style.maxHeight = inputArea.scrollHeight + 'px';
+  }
+});
+
+// [新增] 清空功能实现
+function clearText() {
+  textInput.value = '';
+  updateDisplay(); // 重置显示区域
+  
+  // 如果输入框是折叠的，自动展开以便用户看到清空效果
+  const inputArea = document.getElementById('inputArea');
+  if (inputArea.classList.contains('collapsed')) {
+    toggleInput();
+  }
+}
+
+// [新增] 绑定按钮事件
+document.getElementById('clearBtn').addEventListener('click', clearText);
+
+</script>
+</body>
+</html>
