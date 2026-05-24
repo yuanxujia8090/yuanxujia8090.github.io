@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="基于 Datetime Format Converter（Michael Waterfall）和 FY Translator 实战经验总结。  目录 1. Alfred Workflow 架构 2. 核心概念 3. info.plist 详解 4. Python 脚本开发 5. alfred.py 辅助库 6. TDD 测试策略 7. 调试方法 8. 常见问题与陷阱 9. 发布与分发   1. A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alfred Workflow 开发、调试指南">
+<meta property="og:url" content="https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/index.html">
+<meta property="og:site_name" content="袁旭佳(Aaron)的博客">
+<meta property="og:description" content="基于 Datetime Format Converter（Michael Waterfall）和 FY Translator 实战经验总结。  目录 1. Alfred Workflow 架构 2. 核心概念 3. info.plist 详解 4. Python 脚本开发 5. alfred.py 辅助库 6. TDD 测试策略 7. 调试方法 8. 常见问题与陷阱 9. 发布与分发   1. A">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-24T01:30:26.000Z">
+<meta property="article:modified_time" content="2026-05-24T01:31:49.266Z">
+<meta property="article:author" content="袁旭佳(Aaron)">
+<meta property="article:tag" content="alfred">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Alfred Workflow 开发、调试指南</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/05/10/confiy-litellm/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&text=Alfred Workflow 开发、调试指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&is_video=false&description=Alfred Workflow 开发、调试指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Alfred Workflow 开发、调试指南&body=Check out this article: https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&name=Alfred Workflow 开发、调试指南&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&t=Alfred Workflow 开发、调试指南"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Alfred-Workflow-%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">1. Alfred Workflow 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">2.1.</span> <span class="toc-text">数据流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E8%BE%93%E5%85%A5%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%AF%94"><span class="toc-number">2.2.</span> <span class="toc-text">两种输入类型对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8-Keyword-Action%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">为什么不用 Keyword + Action？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">2. 核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Keyword%EF%BC%88%E5%85%B3%E9%94%AE%E8%AF%8D%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 Keyword（关键词）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Script-Filter-vs-Keyword"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 Script Filter vs Keyword</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-XML-%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 XML 输出格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-info-plist-%E8%AF%A6%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">3. info.plist 详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%8C%E6%95%B4%E6%A8%A1%E6%9D%BF%EF%BC%88Script-Filter-Clipboard-Output%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 完整模板（Script Filter + Clipboard Output）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-escaping-%E8%BD%AC%E4%B9%89%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 escaping 转义模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Alfred-Workflow-Editor%EF%BC%88%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%96%E8%BE%91%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 Alfred Workflow Editor（可视化编辑）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Python-%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91"><span class="toc-number">5.</span> <span class="toc-text">4. Python 脚本开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%85%A5%E5%8F%A3%E7%82%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 入口点模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Alfred-%E8%B0%83%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 Alfred 调用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Python-3-%E5%85%BC%E5%AE%B9%E6%80%A7%EF%BC%88alfred-py%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 Python 3 兼容性（alfred.py）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-alfred-py-Item-%E7%B1%BB%E4%BD%BF%E7%94%A8"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 alfred.py Item 类使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E5%A4%9A%E7%BB%93%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 多结果展示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-alfred-py-%E8%BE%85%E5%8A%A9%E5%BA%93"><span class="toc-number">6.</span> <span class="toc-text">5. alfred.py 辅助库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%A0%B8%E5%BF%83-API"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 核心 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Item-attributes-%E5%B8%B8%E7%94%A8%E5%AD%97%E6%AE%B5"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 Item.attributes 常用字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-uid-%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 uid() 生成规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-TDD-%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5"><span class="toc-number">7.</span> <span class="toc-text">6. TDD 测试策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B5%8B%E8%AF%95%EF%BC%9F"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 为什么需要测试？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%B5%8B%E8%AF%95%E6%9E%B6%E6%9E%84"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 测试架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%BC%8F"><span class="toc-number">7.3.</span> <span class="toc-text">6.3 模块加载模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-TDD-%E7%BA%A2%E7%BB%BF%E9%87%8D%E6%9E%84%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.4.</span> <span class="toc-text">6.4 TDD 红绿重构循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-Mock-API-%E8%B0%83%E7%94%A8"><span class="toc-number">7.5.</span> <span class="toc-text">6.5 Mock API 调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-Mock-stdout-%E8%BE%93%E5%87%BA"><span class="toc-number">7.6.</span> <span class="toc-text">6.6 Mock stdout 输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">7.7.</span> <span class="toc-text">6.7 测试运行命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">7. 调试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8C%EF%BC%88%E6%9C%80%E5%BF%AB%EF%BC%89"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 命令行直接运行（最快）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Alfred-%E5%86%85%E7%BD%AE%E8%B0%83%E8%AF%95"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 Alfred 内置调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Python-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 Python 断点调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-XML-%E8%BE%93%E5%87%BA%E9%AA%8C%E8%AF%81"><span class="toc-number">8.4.</span> <span class="toc-text">7.4 XML 输出验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%B0%83%E8%AF%95"><span class="toc-number">8.5.</span> <span class="toc-text">7.5 网络请求调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-Alfred-Workflow-Editor-%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">8.6.</span> <span class="toc-text">7.6 Alfred Workflow Editor 调试技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E9%99%B7%E9%98%B1"><span class="toc-number">9.</span> <span class="toc-text">8. 常见问题与陷阱</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-XML-%E8%BE%93%E5%87%BA%E9%97%AE%E9%A2%98"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 XML 输出问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-Python-3-%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 Python 3 兼容性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E4%B8%AD%E6%96%87%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 中文编码问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-Script-Filter-%E4%B8%8D%E8%A7%A6%E5%8F%91"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 Script Filter 不触发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-Clipboard-Output-%E4%B8%8D%E5%B7%A5%E4%BD%9C"><span class="toc-number">9.5.</span> <span class="toc-text">8.5 Clipboard Output 不工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-6-%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86"><span class="toc-number">9.6.</span> <span class="toc-text">8.6 特殊字符处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-7-API-%E8%B0%83%E7%94%A8%E5%A4%B1%E8%B4%A5%EF%BC%88422-Connection-Error%EF%BC%89"><span class="toc-number">9.7.</span> <span class="toc-text">8.7 API 调用失败（422 &#x2F; Connection Error）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-8-Workflow-%E5%AE%89%E8%A3%85%E5%90%8E%E4%B8%8D%E7%94%9F%E6%95%88"><span class="toc-number">9.8.</span> <span class="toc-text">8.8 Workflow 安装后不生效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%8F%91%E5%B8%83%E4%B8%8E%E5%88%86%E5%8F%91"><span class="toc-number">10.</span> <span class="toc-text">9. 发布与分发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E6%89%93%E5%8C%85%E4%B8%BA-alfredworkflow"><span class="toc-number">10.1.</span> <span class="toc-text">9.1 打包为 .alfredworkflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="toc-number">10.2.</span> <span class="toc-text">9.2 手动安装路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-Workflow-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">10.3.</span> <span class="toc-text">9.3 Workflow 目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="toc-number">10.4.</span> <span class="toc-text">9.4 版本管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-A-%E5%AE%8C%E6%95%B4%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">附录 A: 完整项目结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-B-%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%80%9F%E6%9F%A5"><span class="toc-number">12.</span> <span class="toc-text">附录 B: 关键配置文件速查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#config-json%EF%BC%88API-%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">12.1.</span> <span class="toc-text">config.json（API 配置）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyproject-toml%EF%BC%88%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">12.2.</span> <span class="toc-text">pyproject.toml（项目配置）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-C-%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="toc-number">13.</span> <span class="toc-text">附录 C: 调试命令速查</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Alfred Workflow 开发、调试指南
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">袁旭佳(Aaron)</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-05-24T01:30:26.000Z" class="dt-published" itemprop="datePublished">2026-05-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/alfred/" rel="tag">alfred</a>, <a class="p-category" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>基于 <code>Datetime Format Converter</code>（Michael Waterfall）和 <code>FY Translator</code> 实战经验总结。</p>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="#1-alfred-workflow-%E6%9E%B6%E6%9E%84">1. Alfred Workflow 架构</a></li>
+<li><a href="#2-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5">2. 核心概念</a></li>
+<li><a href="#3-infoplist-%E8%AF%A6%E8%A7%A3">3. info.plist 详解</a></li>
+<li><a href="#4-python-%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91">4. Python 脚本开发</a></li>
+<li><a href="#5-alfredpy-%E8%BE%85%E5%8A%A9%E5%BA%93">5. alfred.py 辅助库</a></li>
+<li><a href="#6-tdd-%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5">6. TDD 测试策略</a></li>
+<li><a href="#7-%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95">7. 调试方法</a></li>
+<li><a href="#8-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E9%99%B7%E9%98%B1">8. 常见问题与陷阱</a></li>
+<li><a href="#9-%E5%8F%91%E5%B8%83%E4%B8%8E%E5%88%86%E5%8F%91">9. 发布与分发</a></li>
+</ul>
+<hr>
+<h2 id="1-Alfred-Workflow-架构"><a href="#1-Alfred-Workflow-架构" class="headerlink" title="1. Alfred Workflow 架构"></a>1. Alfred Workflow 架构</h2><h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">用户输入 (⌘Space → &quot;fy hello&quot;)</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">Script Filter (type:5) 触发</span><br><span class="line">    │</span><br><span class="line">    ├── keyword=&quot;fy&quot;, withSpace=true</span><br><span class="line">    │   → Alfred 捕获 &quot;hello&quot; 作为 &#123;query&#125;</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">bash 执行: python3 translate.py &quot;&#123;query&#125;&quot;</span><br><span class="line">    │</span><br><span class="line">    ├── Python 脚本处理逻辑</span><br><span class="line">    │   ├── 语言检测 (detect_lang)</span><br><span class="line">    │   ├── API 调用 (call_omlx)</span><br><span class="line">    │   └── 结果组装 (process)</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">stdout 输出 XML → &lt;items&gt;&lt;item&gt;...&lt;/item&gt;&lt;/items&gt;</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">Alfred 解析 XML，展示结果列表</span><br><span class="line">    │</span><br><span class="line">    ├── 用户选择 → clipboard output (type:3)</span><br><span class="line">    └── 自动复制译文到剪贴板</span><br></pre></td></tr></table></figure>
+
+<h3 id="两种输入类型对比"><a href="#两种输入类型对比" class="headerlink" title="两种输入类型对比"></a>两种输入类型对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Script Filter (type:5)</th>
+<th>Keyword (type:8) + Action (type:14)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>动态输入</td>
+<td>✅ 支持 <code>{query}</code></td>
+<td>❌ 静态参数或复杂拼接</td>
+</tr>
+<tr>
+<td>输出格式</td>
+<td>XML (<code>&lt;items&gt;</code>)</td>
+<td>JSON (不可靠)</td>
+</tr>
+<tr>
+<td>过滤能力</td>
+<td>✅ Alfred 内置搜索过滤</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td>推荐度</td>
+<td><strong>首选</strong></td>
+<td>仅用于简单固定参数场景</td>
+</tr>
+</tbody></table>
+<h3 id="为什么不用-Keyword-Action？"><a href="#为什么不用-Keyword-Action？" class="headerlink" title="为什么不用 Keyword + Action？"></a>为什么不用 Keyword + Action？</h3><p>旧版 FY Translator 使用 <code>type:8 (Keyword)</code> + <code>type:14 (Action)</code>，输出 JSON。在 Alfred 4 中：</p>
+<ul>
+<li>JSON 输出被当作纯文本显示，而非结构化结果</li>
+<li>无法利用 Alfred 的搜索过滤功能</li>
+<li><code>escaping</code> 配置复杂，特殊字符容易出错</li>
+</ul>
+<p><strong>结论：始终使用 Script Filter (type:5)。</strong></p>
+<hr>
+<h2 id="2-核心概念"><a href="#2-核心概念" class="headerlink" title="2. 核心概念"></a>2. 核心概念</h2><h3 id="2-1-Keyword（关键词）"><a href="#2-1-Keyword（关键词）" class="headerlink" title="2.1 Keyword（关键词）"></a>2.1 Keyword（关键词）</h3><p>用户在 Alfred 中触发 workflow 的入口词。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>keyword<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>fy<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 用户输入 &quot;fy hello&quot; → Alfred 提取 &quot;hello&quot; 作为 &#123;query&#125; --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>最佳实践：</strong></p>
+<ul>
+<li>简短、易记（1-3个字符）</li>
+<li>避免与系统命令冲突</li>
+<li><code>withSpace: true</code> → 用户必须输入空格后才触发（减少误触）</li>
+</ul>
+<h3 id="2-2-Script-Filter-vs-Keyword"><a href="#2-2-Script-Filter-vs-Keyword" class="headerlink" title="2.2 Script Filter vs Keyword"></a>2.2 Script Filter vs Keyword</h3><p><strong>Script Filter (type:5)</strong> — 动态内容生成：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>type<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>5<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>script<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>/usr/bin/python3 translate.py &quot;&#123;query&#125;&quot;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>withspace<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Keyword (type:8)</strong> — 静态触发：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>type<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>8<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 不执行脚本，仅触发后续 Action --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-XML-输出格式"><a href="#2-3-XML-输出格式" class="headerlink" title="2.3 XML 输出格式"></a>2.3 XML 输出格式</h3><p>Alfred 通过 stdout 接收 XML，根元素必须是 <code>&lt;items&gt;</code>：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">items</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">uid</span>=<span class="string">&quot;unique-id&quot;</span> <span class="attr">arg</span>=<span class="string">&quot;copy-value&quot;</span> <span class="attr">valid</span>=<span class="string">&quot;yes&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>翻译结果<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">subtitle</span>&gt;</span>en → zh | 原文内容<span class="tag">&lt;/<span class="name">subtitle</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">icon</span>&gt;</span>icon.png<span class="tag">&lt;/<span class="name">icon</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">items</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Item 属性：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+<th>可选值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>uid</code></td>
+<td>唯一标识（Alfred 用于去重）</td>
+<td>任意字符串</td>
+</tr>
+<tr>
+<td><code>arg</code></td>
+<td>点击后传递给 Action 的值</td>
+<td>任意字符串</td>
+</tr>
+<tr>
+<td><code>valid</code></td>
+<td>是否可点击&#x2F;执行</td>
+<td><code>&quot;yes&quot;</code> &#x2F; <code>&quot;no&quot;</code></td>
+</tr>
+<tr>
+<td><code>autocomplete</code></td>
+<td>自动补全文本</td>
+<td>任意字符串</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-info-plist-详解"><a href="#3-info-plist-详解" class="headerlink" title="3. info.plist 详解"></a>3. info.plist 详解</h2><h3 id="3-1-完整模板（Script-Filter-Clipboard-Output）"><a href="#3-1-完整模板（Script-Filter-Clipboard-Output）" class="headerlink" title="3.1 完整模板（Script Filter + Clipboard Output）"></a>3.1 完整模板（Script Filter + Clipboard Output）</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">plist</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">&quot;1.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 基本信息 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>bundleid<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.runningdot.fy-translator<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>name<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>FY Translator<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>description<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>输入 &#x27;fy 文字&#x27; 自动翻译（英文↔中文），调用本地 oMLX 模型。<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>version<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>2.0<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>credits<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">string</span>&gt;</span>奔跑的圆点<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>disabled<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">false</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- workflow 节点 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>objects<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">array</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 节点1: Script Filter (输入) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>config<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 关键词 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>keyword<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>fy<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 执行命令 → &#123;query&#125; 会被 Alfred 替换 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>script<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">string</span>&gt;</span>/usr/bin/python3 translate.py &quot;&#123;query&#125;&quot;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 输出类型: 0=脚本, 1=文件 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>scriptargtype<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>0<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 不指定脚本文件, 直接内联脚本 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>scriptfile<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 转义模式: 36 = \ (反斜杠) --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>escaping<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>36<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 需要空格后才触发 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>withspace<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 运行中提示 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>runningsubtext<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>翻译中...<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 子文本 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>subtext<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>自动中英互译 · 本地 oMLX 模型<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 标题 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>title<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>FY 翻译<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 类型: 5 = Script Filter --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>type<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>5<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 队列模式: 1=立即执行 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>queuemode<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>1<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 初始立即执行 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>queuedelayimmediatelyinitially<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 队列延迟(毫秒) --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>queuedelaycustom<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>300<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 参数处理 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>argumenttype<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>0<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>argumenttrimmode<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>0<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>argumenttreatemptyqueryasnil<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">false</span>/&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 过滤 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>alfredfiltersresults<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">false</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>alfredfiltersresultsmatchmode<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>0<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">            </span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>type<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>alfred.workflow.input.scriptfilter<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>uid<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>script_filter_fy<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>version<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>3<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 节点2: Clipboard Output (输出) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>config<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 复制内容 → arg 的值 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>clipboardtext<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>&#123;query&#125;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment">&lt;!-- 自动粘贴 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">key</span>&gt;</span>autopaste<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">            </span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>type<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>alfred.workflow.output.clipboard<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>uid<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>clipboard_output<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">key</span>&gt;</span>version<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>3<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- UI 布局 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>uidata<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">key</span>&gt;</span>script_filter_fy<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dict</span>&gt;</span><span class="tag">&lt;<span class="name">key</span>&gt;</span>xpos<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>240<span class="tag">&lt;/<span class="name">integer</span>&gt;</span><span class="tag">&lt;<span class="name">key</span>&gt;</span>ypos<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>240<span class="tag">&lt;/<span class="name">integer</span>&gt;</span><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">key</span>&gt;</span>clipboard_output<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dict</span>&gt;</span><span class="tag">&lt;<span class="name">key</span>&gt;</span>xpos<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>640<span class="tag">&lt;/<span class="name">integer</span>&gt;</span><span class="tag">&lt;<span class="name">key</span>&gt;</span>ypos<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>240<span class="tag">&lt;/<span class="name">integer</span>&gt;</span><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-escaping-转义模式"><a href="#3-2-escaping-转义模式" class="headerlink" title="3.2 escaping 转义模式"></a>3.2 escaping 转义模式</h3><p><code>escaping</code> 值决定 Alfred 如何转义 <code>{query}</code> 中的特殊字符：</p>
+<table>
+<thead>
+<tr>
+<th>escaping 值</th>
+<th>含义</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code> (None)</td>
+<td>不转义</td>
+<td>纯文本，无特殊字符</td>
+</tr>
+<tr>
+<td><code>16</code> (AppleScript)</td>
+<td>AppleScript 转义</td>
+<td>调用 AppleScript</td>
+</tr>
+<tr>
+<td><code>32</code> (POSIX shell)</td>
+<td>POSIX shell 转义</td>
+<td>bash&#x2F;shell 命令</td>
+</tr>
+<tr>
+<td><code>36</code> (反斜杠)</td>
+<td><code>\x</code> → <code>x</code></td>
+<td><strong>Python 脚本（推荐）</strong></td>
+</tr>
+<tr>
+<td><code>64</code> (正则)</td>
+<td>Perl 兼容正则转义</td>
+<td>正则表达式</td>
+</tr>
+<tr>
+<td><code>128</code> (HTML)</td>
+<td>HTML 实体转义</td>
+<td>Web API</td>
+</tr>
+</tbody></table>
+<p><strong>FY Translator 使用 <code>36</code>（反斜杠），因为 Python 脚本中 <code>{query}</code> 可能包含空格、引号等，Alfred 会在前面加 <code>\</code> 转义。</strong></p>
+<h3 id="3-3-Alfred-Workflow-Editor（可视化编辑）"><a href="#3-3-Alfred-Workflow-Editor（可视化编辑）" class="headerlink" title="3.3 Alfred Workflow Editor（可视化编辑）"></a>3.3 Alfred Workflow Editor（可视化编辑）</h3><ol>
+<li><strong>双击 <code>.alfredworkflow</code> 文件</strong> → 打开 Alfred Workflow Editor</li>
+<li><strong>拖拽节点</strong>：左侧面板选择节点类型，拖到画布</li>
+<li><strong>编辑配置</strong>：点击节点 → 右侧面板修改参数</li>
+<li><strong>连接节点</strong>：拖拽节点之间的连线（Script Filter → Clipboard Output）</li>
+<li><strong>导出</strong>：File → Export 生成 <code>.alfredworkflow</code></li>
+</ol>
+<hr>
+<h2 id="4-Python-脚本开发"><a href="#4-Python-脚本开发" class="headerlink" title="4. Python 脚本开发"></a>4. Python 脚本开发</h2><h3 id="4-1-入口点模式"><a href="#4-1-入口点模式" class="headerlink" title="4.1 入口点模式"></a>4.1 入口点模式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># translate.py — Script Filter 脚本</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># &#123;query&#125; 通过命令行参数传入</span></span><br><span class="line">    query = sys.argv[<span class="number">1</span>] <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &gt; <span class="number">1</span> <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    process(query)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process</span>(<span class="params">query</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;主处理逻辑&quot;&quot;&quot;</span></span><br><span class="line">    text = query.strip() <span class="keyword">if</span> query <span class="keyword">else</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 空输入 → 显示用法提示</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> text:</span><br><span class="line">        show_usage()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 正常处理...</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-Alfred-调用方式"><a href="#4-2-Alfred-调用方式" class="headerlink" title="4.2 Alfred 调用方式"></a>4.2 Alfred 调用方式</h3><p><strong>info.plist 中的 script 配置：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>script<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>/usr/bin/python3 translate.py &quot;&#123;query&#125;&quot;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Alfred 执行流程：</strong></p>
+<ol>
+<li>用户输入 <code>fy Hello World</code></li>
+<li>Alfred 提取 <code>Hello World</code>（去掉 keyword “fy”）</li>
+<li>执行 <code>/usr/bin/python3 translate.py &quot;Hello World&quot;</code></li>
+<li>Python <code>sys.argv = [&#39;/path/to/translate.py&#39;, &#39;Hello World&#39;]</code></li>
+<li>脚本输出 XML 到 stdout</li>
+<li>Alfred 解析 XML，展示结果</li>
+</ol>
+<h3 id="4-3-Python-3-兼容性（alfred-py）"><a href="#4-3-Python-3-兼容性（alfred-py）" class="headerlink" title="4.3 Python 3 兼容性（alfred.py）"></a>4.3 Python 3 兼容性（alfred.py）</h3><p>参考工作流中的 <code>alfred.py</code> 是 Python 2 编写的，需要适配 Python 3：</p>
+<p><strong>关键修改点：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ❌ Python 2 — plistlib.readPlist() (已废弃)</span></span><br><span class="line">preferences = plistlib.readPlist(<span class="string">&#x27;info.plist&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ Python 3 — plistlib.load()</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;info.plist&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    preferences = plistlib.load(f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ❌ Python 2 — iteritems()</span></span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="built_in">dict</span>.iteritems():</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ Python 3 — items()</span></span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="built_in">dict</span>.items():</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="comment"># ❌ Python 2 — unicode() 内置函数, tostring() 返回 bytes</span></span><br><span class="line">unicode(value)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ Python 3 — str()</span></span><br><span class="line"><span class="built_in">str</span>(value)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ❌ tostring() 返回 bytes（Python 2 行为不同）</span></span><br><span class="line">tostring(root)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ decode UTF-8</span></span><br><span class="line">tostring(root, encoding=<span class="string">&#x27;utf-8&#x27;</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4-alfred-py-Item-类使用"><a href="#4-4-alfred-py-Item-类使用" class="headerlink" title="4.4 alfred.py Item 类使用"></a>4.4 alfred.py Item 类使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.insert(<span class="number">0</span>, os.path.dirname(__file__))  <span class="comment"># 确保能找到 alfred.py</span></span><br><span class="line"><span class="keyword">import</span> alfred</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建结果项</span></span><br><span class="line">item = alfred.Item(</span><br><span class="line">    title=<span class="string">&quot;翻译结果&quot;</span>,</span><br><span class="line">    subtitle=<span class="string">&quot;en → zh | Hello world&quot;</span>,</span><br><span class="line">    attributes=&#123;</span><br><span class="line">        <span class="string">&quot;uid&quot;</span>: <span class="string">&quot;result-1&quot;</span>,</span><br><span class="line">        <span class="string">&quot;arg&quot;</span>: <span class="string">&quot;你好世界&quot;</span>,  <span class="comment"># 点击后传递给 Clipboard Output</span></span><br><span class="line">        <span class="string">&quot;valid&quot;</span>: <span class="string">&quot;yes&quot;</span>     <span class="comment"># &quot;yes&quot;=可执行, &quot;no&quot;=仅展示</span></span><br><span class="line">    &#125;,</span><br><span class="line">    icon=<span class="string">&quot;icon.png&quot;</span>  <span class="comment"># 可选</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出 XML</span></span><br><span class="line"><span class="built_in">print</span>(alfred.xml([item]))</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-5-多结果展示"><a href="#4-5-多结果展示" class="headerlink" title="4.5 多结果展示"></a>4.5 多结果展示</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">items = []</span><br><span class="line"><span class="keyword">for</span> i, result <span class="keyword">in</span> <span class="built_in">enumerate</span>(results):</span><br><span class="line">    item = alfred.Item(</span><br><span class="line">        title=result[<span class="string">&quot;title&quot;</span>],</span><br><span class="line">        subtitle=result[<span class="string">&quot;subtitle&quot;</span>],</span><br><span class="line">        attributes=&#123;</span><br><span class="line">            <span class="string">&quot;uid&quot;</span>: alfred.uid(i),  <span class="comment"># 使用 uid() 生成唯一 ID</span></span><br><span class="line">            <span class="string">&quot;arg&quot;</span>: result[<span class="string">&quot;value&quot;</span>],</span><br><span class="line">            <span class="string">&quot;valid&quot;</span>: <span class="string">&quot;yes&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">    items.append(item)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(alfred.xml(items))  <span class="comment"># Alfred 最多显示 9 个（_MAX_RESULTS_DEFAULT）</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-alfred-py-辅助库"><a href="#5-alfred-py-辅助库" class="headerlink" title="5. alfred.py 辅助库"></a>5. alfred.py 辅助库</h2><h3 id="5-1-核心-API"><a href="#5-1-核心-API" class="headerlink" title="5.1 核心 API"></a>5.1 核心 API</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>alfred.Item(title, subtitle, attributes)</code></td>
+<td>创建结果项</td>
+</tr>
+<tr>
+<td><code>alfred.xml([items])</code></td>
+<td>编译 XML 字符串</td>
+</tr>
+<tr>
+<td><code>alfred.uid(index)</code></td>
+<td>生成唯一 ID（基于 bundleid）</td>
+</tr>
+<tr>
+<td><code>alfred.args()</code></td>
+<td>解析命令行参数（带 unescape）</td>
+</tr>
+<tr>
+<td><code>alfred.config()</code></td>
+<td>返回 workflow 数据目录路径</td>
+</tr>
+<tr>
+<td><code>alfred.work(volatile)</code></td>
+<td>返回工作目录（volatile&#x3D;True → 缓存）</td>
+</tr>
+<tr>
+<td><code>alfred.write(text)</code></td>
+<td>写入 stdout（替代 print）</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-Item-attributes-常用字段"><a href="#5-2-Item-attributes-常用字段" class="headerlink" title="5.2 Item.attributes 常用字段"></a>5.2 Item.attributes 常用字段</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">attributes = &#123;</span><br><span class="line">    <span class="string">&quot;uid&quot;</span>: <span class="string">&quot;unique-id&quot;</span>,        <span class="comment"># 唯一标识（必须）</span></span><br><span class="line">    <span class="string">&quot;arg&quot;</span>: <span class="string">&quot;value&quot;</span>,            <span class="comment"># 点击后传递的值</span></span><br><span class="line">    <span class="string">&quot;valid&quot;</span>: <span class="string">&quot;yes&quot;</span>,            <span class="comment"># &quot;yes&quot;=可执行, &quot;no&quot;=仅展示</span></span><br><span class="line">    <span class="string">&quot;autocomplete&quot;</span>: <span class="string">&quot;text&quot;</span>,    <span class="comment"># 自动补全文本</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-uid-生成规则"><a href="#5-3-uid-生成规则" class="headerlink" title="5.3 uid() 生成规则"></a>5.3 uid() 生成规则</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># alfred.uid(0) → &quot;com.runningdot.fy-translator-0&quot;</span></span><br><span class="line"><span class="comment"># alfred.uid(1) → &quot;com.runningdot.fy-translator-1&quot;</span></span><br><span class="line"></span><br><span class="line">uid = alfred.uid(index)</span><br><span class="line"><span class="comment"># 基于 bundleid + index，确保全局唯一</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-TDD-测试策略"><a href="#6-TDD-测试策略" class="headerlink" title="6. TDD 测试策略"></a>6. TDD 测试策略</h2><h3 id="6-1-为什么需要测试？"><a href="#6-1-为什么需要测试？" class="headerlink" title="6.1 为什么需要测试？"></a>6.1 为什么需要测试？</h3><p>Alfred workflow 的 Python 脚本是<strong>纯逻辑代码</strong>，不依赖 GUI。这意味着：</p>
+<ul>
+<li>可以完全脱离 Alfred 运行和测试</li>
+<li><code>python3 translate.py &quot;Hello world&quot;</code> → 直接输出 XML</li>
+<li>pytest 可以 mock API 调用，验证逻辑正确性</li>
+</ul>
+<h3 id="6-2-测试架构"><a href="#6-2-测试架构" class="headerlink" title="6.2 测试架构"></a>6.2 测试架构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tests/</span><br><span class="line">├── test_workflow_omlx_direct.py   # 翻译逻辑测试（14个）</span><br><span class="line">└── test_alfred_script_filter.py   # Script Filter 模式测试（12个）</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-模块加载模式"><a href="#6-3-模块加载模式" class="headerlink" title="6.3 模块加载模式"></a>6.3 模块加载模式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> importlib.util</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_translate_module</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;动态加载 alfred-workflow/translate.py 作为模块&quot;&quot;&quot;</span></span><br><span class="line">    workflow_dir = os.path.join(os.path.dirname(__file__), <span class="string">&quot;..&quot;</span>, <span class="string">&quot;alfred-workflow&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 加载 translate.py</span></span><br><span class="line">    spec = importlib.util.spec_from_file_location(</span><br><span class="line">        <span class="string">&quot;translate&quot;</span>, os.path.join(workflow_dir, <span class="string">&quot;translate.py&quot;</span>)</span><br><span class="line">    )</span><br><span class="line">    mod = importlib.util.module_from_spec(spec)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 注入 alfred 模块（translate.py import alfred）</span></span><br><span class="line">    sys.path.insert(<span class="number">0</span>, workflow_dir)</span><br><span class="line">    <span class="keyword">import</span> alfred <span class="keyword">as</span> real_alfred</span><br><span class="line">    sys.modules[<span class="string">&quot;alfred&quot;</span>] = real_alfred</span><br><span class="line">    </span><br><span class="line">    spec.loader.exec_module(mod)</span><br><span class="line">    <span class="keyword">return</span> mod</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-TDD-红绿重构循环"><a href="#6-4-TDD-红绿重构循环" class="headerlink" title="6.4 TDD 红绿重构循环"></a>6.4 TDD 红绿重构循环</h3><p><strong>RED — 写失败测试：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_detect_english_text</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;纯英文 → src=en, tgt=zh-Hans&quot;&quot;&quot;</span></span><br><span class="line">    mod = load_translate_module()</span><br><span class="line">    <span class="keyword">assert</span> mod.detect_lang(<span class="string">&quot;Hello world&quot;</span>) == (<span class="string">&quot;en&quot;</span>, <span class="string">&quot;zh-Hans&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>GREEN — 写最小代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">detect_lang</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> text <span class="keyword">or</span> <span class="keyword">not</span> text.strip():</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    has_chinese = <span class="built_in">any</span>(<span class="string">&quot;\u4e00&quot;</span> &lt;= c &lt;= <span class="string">&quot;\u9fff&quot;</span> <span class="keyword">for</span> c <span class="keyword">in</span> text)</span><br><span class="line">    has_japanese = <span class="built_in">any</span>(<span class="string">&quot;\u3040&quot;</span> &lt;= c &lt;= <span class="string">&quot;\u309f&quot;</span> <span class="keyword">or</span> <span class="string">&quot;\u30a0&quot;</span> &lt;= c &lt;= <span class="string">&quot;\u30ff&quot;</span></span><br><span class="line">                       <span class="keyword">for</span> c <span class="keyword">in</span> text)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> has_chinese <span class="keyword">and</span> <span class="keyword">not</span> has_japanese:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot;zh-Hans&quot;</span>, <span class="string">&quot;en&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> has_japanese:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot;ja&quot;</span>, <span class="string">&quot;zh-Hans&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot;en&quot;</span>, <span class="string">&quot;zh-Hans&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>REFACTOR — 清理代码：</strong></p>
+<ul>
+<li>提取常量（语言映射表）</li>
+<li>简化条件判断</li>
+<li>添加类型注解</li>
+</ul>
+<h3 id="6-5-Mock-API-调用"><a href="#6-5-Mock-API-调用" class="headerlink" title="6.5 Mock API 调用"></a>6.5 Mock API 调用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> unittest.mock <span class="keyword">import</span> patch, MagicMock</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_omlx_translate_success_with_mock</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;测试 API 调用成功&quot;&quot;&quot;</span></span><br><span class="line">    mod = load_translate_module()</span><br><span class="line">    </span><br><span class="line">    mock_response = &#123;<span class="string">&quot;choices&quot;</span>: [&#123;<span class="string">&quot;text&quot;</span>: <span class="string">&quot;你好，世界！&quot;</span>&#125;]&#125;</span><br><span class="line">    mock_resp = MagicMock()</span><br><span class="line">    mock_resp.read.return_value = json.dumps(mock_response).encode(<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> patch.<span class="built_in">object</span>(mod.urllib.request, <span class="string">&#x27;urlopen&#x27;</span>) <span class="keyword">as</span> mock_open:</span><br><span class="line">        mock_open.return_value.__enter__ = <span class="keyword">lambda</span> s: mock_resp</span><br><span class="line">        mock_open.return_value.__exit__ = MagicMock(return_value=<span class="literal">False</span>)</span><br><span class="line">        </span><br><span class="line">        result, error = mod.call_omlx(<span class="string">&quot;Hello world&quot;</span>, <span class="string">&quot;en&quot;</span>, <span class="string">&quot;zh-Hans&quot;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">assert</span> result == <span class="string">&quot;你好，世界！&quot;</span></span><br><span class="line">        <span class="keyword">assert</span> error <span class="keyword">is</span> <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 验证调用了正确的 URL</span></span><br><span class="line">        req_obj = mock_open.call_args[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">assert</span> <span class="string">&quot;/completions&quot;</span> <span class="keyword">in</span> req_obj.full_url</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-6-Mock-stdout-输出"><a href="#6-6-Mock-stdout-输出" class="headerlink" title="6.6 Mock stdout 输出"></a>6.6 Mock stdout 输出</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_process_success_shows_translation</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;测试 process() 输出正确 XML&quot;&quot;&quot;</span></span><br><span class="line">    mod = load_translate_module()</span><br><span class="line">    </span><br><span class="line">    output = io.StringIO()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Mock API 调用，避免真实网络请求</span></span><br><span class="line">    <span class="keyword">with</span> patch.<span class="built_in">object</span>(mod, <span class="string">&#x27;call_omlx&#x27;</span>, return_value=(<span class="string">&quot;你好，世界！&quot;</span>, <span class="literal">None</span>)):</span><br><span class="line">        <span class="keyword">with</span> patch(<span class="string">&#x27;sys.stdout&#x27;</span>, output):</span><br><span class="line">            mod.process(<span class="string">&quot;Hello world&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    xml_output = output.getvalue()</span><br><span class="line">    <span class="keyword">assert</span> <span class="string">&#x27;&lt;title&gt;你好，世界！&lt;/title&gt;&#x27;</span> <span class="keyword">in</span> xml_output</span><br><span class="line">    <span class="keyword">assert</span> <span class="string">&#x27;🇬🇧 → 🇨🇳&#x27;</span> <span class="keyword">in</span> xml_output</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-7-测试运行命令"><a href="#6-7-测试运行命令" class="headerlink" title="6.7 测试运行命令"></a>6.7 测试运行命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 全部测试</span></span><br><span class="line">uv run pytest tests/ -q</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单个文件</span></span><br><span class="line">uv run pytest tests/test_workflow_omlx_direct.py -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 单个测试用例</span></span><br><span class="line">uv run pytest tests/test_workflow_omlx_direct.py::test_detect_chinese_text -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 带详细输出</span></span><br><span class="line">uv run pytest tests/ -v --tb=short</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-调试方法"><a href="#7-调试方法" class="headerlink" title="7. 调试方法"></a>7. 调试方法</h2><h3 id="7-1-命令行直接运行（最快）"><a href="#7-1-命令行直接运行（最快）" class="headerlink" title="7.1 命令行直接运行（最快）"></a>7.1 命令行直接运行（最快）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绕过 Alfred，直接在终端测试脚本</span></span><br><span class="line"><span class="built_in">cd</span> /Users/yuanxj/Documents/github/local-translator/alfred-workflow</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试英文→中文</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试中文→英文</span></span><br><span class="line">python3 translate.py <span class="string">&quot;今天天气真好&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试空输入</span></span><br><span class="line">python3 translate.py <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查输出是否为有效 XML</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span> | python3 -m xml.dom.minidom --pretty-print</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-Alfred-内置调试"><a href="#7-2-Alfred-内置调试" class="headerlink" title="7.2 Alfred 内置调试"></a>7.2 Alfred 内置调试</h3><p><strong>查看 Workflow 日志：</strong></p>
+<ol>
+<li>Alfred 偏好设置 → Advanced → 打开 “Show Log Directory”</li>
+<li>查看 <code>Alfred.log</code>，过滤 workflow bundleid</li>
+</ol>
+<p><strong>启用调试模式：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- info.plist 中添加 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>debug<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Alfred 调试面板：</strong></p>
+<ul>
+<li><code>⌘Space</code> → 输入 workflow keyword</li>
+<li>右键结果 → “Copy Result” 查看 arg 值</li>
+<li>观察 <code>runningsubtext</code> 显示加载状态</li>
+</ul>
+<h3 id="7-3-Python-断点调试"><a href="#7-3-Python-断点调试" class="headerlink" title="7.3 Python 断点调试"></a>7.3 Python 断点调试</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pdb; pdb.set_trace()  <span class="comment"># 设置断点</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或运行时附加调试器</span></span><br><span class="line">python3 -m pdb translate.py <span class="string">&quot;Hello world&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-4-XML-输出验证"><a href="#7-4-XML-输出验证" class="headerlink" title="7.4 XML 输出验证"></a>7.4 XML 输出验证</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查输出是否为有效 XML</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span> | python3 -c <span class="string">&quot;</span></span><br><span class="line"><span class="string">import sys, xml.etree.ElementTree as ET</span></span><br><span class="line"><span class="string">xml = sys.stdin.read()</span></span><br><span class="line"><span class="string">root = ET.fromstring(xml)</span></span><br><span class="line"><span class="string">print(f&#x27;Root tag: &#123;root.tag&#125;&#x27;)</span></span><br><span class="line"><span class="string">for item in root.findall(&#x27;item&#x27;):</span></span><br><span class="line"><span class="string">    print(f&#x27;  title: &#123;item.find(\&quot;title\&quot;).text&#125;&#x27;)</span></span><br><span class="line"><span class="string">    print(f&#x27;  subtitle: &#123;item.find(\&quot;subtitle\&quot;).text&#125;&#x27;)</span></span><br><span class="line"><span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-5-网络请求调试"><a href="#7-5-网络请求调试" class="headerlink" title="7.5 网络请求调试"></a>7.5 网络请求调试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接测试 oMLX API（不经过 Alfred）</span></span><br><span class="line">curl -s -X POST http://localhost:8050/v1/completions \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;</span></span><br><span class="line"><span class="string">    &quot;model&quot;: &quot;translategemma-4b-it-4bit&quot;,</span></span><br><span class="line"><span class="string">    &quot;prompt&quot;: &quot;&lt;start_of_turn&gt;user\nTranslate from en to zh-Hans: Hello world&lt;end_of_turn&gt;\n&lt;start_of_turn&gt;model\n&quot;,</span></span><br><span class="line"><span class="string">    &quot;max_tokens&quot;: 512,</span></span><br><span class="line"><span class="string">    &quot;temperature&quot;: 0.3,</span></span><br><span class="line"><span class="string">    &quot;stop&quot;: [&quot;&lt;end_of_turn&gt;&quot;],</span></span><br><span class="line"><span class="string">    &quot;stream&quot;: false</span></span><br><span class="line"><span class="string">  &#125;&#x27;</span> | python3 -m json.tool</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 oMLX 服务是否运行</span></span><br><span class="line">curl http://localhost:8050/health</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 local-translator 服务（如果使用中间件）</span></span><br><span class="line">curl http://localhost:8780/api/health</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-6-Alfred-Workflow-Editor-调试技巧"><a href="#7-6-Alfred-Workflow-Editor-调试技巧" class="headerlink" title="7.6 Alfred Workflow Editor 调试技巧"></a>7.6 Alfred Workflow Editor 调试技巧</h3><ol>
+<li><strong>节点连线检查</strong>：确保 Script Filter → Clipboard Output 已连接</li>
+<li><strong>uid 唯一性</strong>：每个节点 uid 必须唯一（重复会导致行为异常）</li>
+<li><strong>escaping 模式</strong>：特殊字符问题 → 检查 escaping 值是否正确</li>
+<li><strong>bundleid 一致性</strong>：确保 info.plist 中 bundleid 与代码中一致</li>
+</ol>
+<hr>
+<h2 id="8-常见问题与陷阱"><a href="#8-常见问题与陷阱" class="headerlink" title="8. 常见问题与陷阱"></a>8. 常见问题与陷阱</h2><h3 id="8-1-XML-输出问题"><a href="#8-1-XML-输出问题" class="headerlink" title="8.1 XML 输出问题"></a>8.1 XML 输出问题</h3><p><strong>症状：</strong> Alfred 显示 “No Results” 或空白结果</p>
+<p><strong>排查步骤：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 检查 stdout 是否有 XML 输出</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 检查是否为有效 XML</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span> | python3 -c <span class="string">&quot;import sys; print(sys.stdin.read()[:200])&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 检查 XML 编码</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span> | file -</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 检查是否包含 BOM 或不可见字符</span></span><br><span class="line">python3 translate.py <span class="string">&quot;Hello world&quot;</span> | xxd | <span class="built_in">head</span> -5</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见原因：</strong></p>
+<ul>
+<li><code>print()</code> 输出到 stderr 而非 stdout</li>
+<li>XML 根元素不是 <code>&lt;items&gt;</code></li>
+<li>Item 缺少 <code>title</code> 字段（Alfred 要求至少一个 item）</li>
+</ul>
+<h3 id="8-2-Python-3-兼容性问题"><a href="#8-2-Python-3-兼容性问题" class="headerlink" title="8.2 Python 3 兼容性问题"></a>8.2 Python 3 兼容性问题</h3><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>AttributeError: module &#39;plistlib&#39; has no attribute &#39;readPlist&#39;</code></td>
+<td>Python 3.13 移除了 <code>readPlist()</code></td>
+<td>改用 <code>plistlib.load(f)</code> + <code>&#39;rb&#39;</code> 模式</td>
+</tr>
+<tr>
+<td><code>AttributeError: &#39;dict&#39; object has no attribute &#39;iteritems&#39;</code></td>
+<td>Python 3 没有 <code>iteritems()</code></td>
+<td>改用 <code>items()</code></td>
+</tr>
+<tr>
+<td><code>NameError: name &#39;unicode&#39; is not defined</code></td>
+<td>Python 3 没有 <code>unicode()</code></td>
+<td>改用 <code>str()</code></td>
+</tr>
+<tr>
+<td>XML SubElement 报错 “argument 3 must be dict”</td>
+<td>中文字符被错误解包为元组</td>
+<td>检查 value 类型，确保是字符串而非 tuple</td>
+</tr>
+</tbody></table>
+<h3 id="8-3-中文编码问题"><a href="#8-3-中文编码问题" class="headerlink" title="8.3 中文编码问题"></a>8.3 中文编码问题</h3><p><strong>症状：</strong> XML 输出中文字符乱码或报错</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ✅ 正确做法：所有字符串显式指定 UTF-8</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;config.json&quot;</span>, <span class="string">&quot;r&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    config = json.load(f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ XML 输出自动 UTF-8（ElementTree 默认）</span></span><br><span class="line">xml_str = alfred.xml([item])  <span class="comment"># → UTF-8 decoded string</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ❌ 错误：不指定 encoding，Python 3 可能用系统默认编码</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;config.json&quot;</span>, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:  <span class="comment"># 可能用 GBK/其他编码</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-4-Script-Filter-不触发"><a href="#8-4-Script-Filter-不触发" class="headerlink" title="8.4 Script Filter 不触发"></a>8.4 Script Filter 不触发</h3><p><strong>排查清单：</strong></p>
+<ol>
+<li>✅ keyword 拼写正确（区分大小写）</li>
+<li>✅ <code>withspace: true</code> → 必须输入空格后触发</li>
+<li>✅ Script Filter 节点类型是 <code>type:5</code>（不是 <code>type:8</code>）</li>
+<li>✅ script 路径正确：<code>/usr/bin/python3 translate.py &quot;{query}&quot;</code></li>
+<li>✅ Python 脚本无语法错误（终端可运行）</li>
+</ol>
+<h3 id="8-5-Clipboard-Output-不工作"><a href="#8-5-Clipboard-Output-不工作" class="headerlink" title="8.5 Clipboard Output 不工作"></a>8.5 Clipboard Output 不工作</h3><p><strong>症状：</strong> 点击结果后剪贴板没有内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- ❌ 错误：clipboardtext 使用了 &#123;query&#125; 但 arg 没有传递值 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>clipboardtext<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>&#123;query&#125;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- ✅ 正确：arg 传递翻译结果，clipboardtext 引用 &#123;query&#125; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>config<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>clipboardtext<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>&#123;query&#125;<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>autopaste<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> <code>clipboardtext</code> 中的 <code>{query}</code> 引用的是 Script Filter item 的 <code>arg</code> 属性值。</p>
+<h3 id="8-6-特殊字符处理"><a href="#8-6-特殊字符处理" class="headerlink" title="8.6 特殊字符处理"></a>8.6 特殊字符处理</h3><p><strong>问题：</strong> <code>{query}</code> 包含引号、空格等，导致 bash 解析错误</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- escaping=36: Alfred 在特殊字符前加 \ --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>escaping<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">integer</span>&gt;</span>36<span class="tag">&lt;/<span class="name">integer</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Python 侧需要 unescape --&gt;</span></span><br><span class="line">def unescape(query, characters=None):</span><br><span class="line">    for character in (UNESCAPE_CHARACTERS if characters is None else characters):</span><br><span class="line">        query = query.replace(&#x27;\\%s&#x27; % character, character)</span><br><span class="line">    return query</span><br><span class="line"></span><br><span class="line">UNESCAPE_CHARACTERS = u&quot; ;()\&quot;&#x27;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-7-API-调用失败（422-Connection-Error）"><a href="#8-7-API-调用失败（422-Connection-Error）" class="headerlink" title="8.7 API 调用失败（422 &#x2F; Connection Error）"></a>8.7 API 调用失败（422 &#x2F; Connection Error）</h3><p><strong>症状：</strong> “翻译服务不可达” 或 API 返回错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 检查 oMLX 是否运行</span></span><br><span class="line">curl http://localhost:8050/health</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 检查端口是否正确</span></span><br><span class="line">lsof -i :8050</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 直接测试 API 调用</span></span><br><span class="line">curl -s -X POST http://localhost:8050/v1/completions \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&#123;&quot;model&quot;:&quot;translategemma-4b-it-4bit&quot;,&quot;prompt&quot;:&quot;test&quot;,&quot;max_tokens&quot;:10&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 检查 Python 脚本中的 URL</span></span><br><span class="line">grep <span class="string">&quot;OMLX_BASE_URL&quot;</span> translate.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 检查 config.json</span></span><br><span class="line"><span class="built_in">cat</span> ../config.json | python3 -m json.tool</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-8-Workflow-安装后不生效"><a href="#8-8-Workflow-安装后不生效" class="headerlink" title="8.8 Workflow 安装后不生效"></a>8.8 Workflow 安装后不生效</h3><p><strong>排查步骤：</strong></p>
+<ol>
+<li><p><strong>检查文件是否复制到位：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -la ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/user.workflow.*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>重启 Alfred：</strong></p>
+<ul>
+<li>系统偏好设置 → 活动监视器 → 搜索 “Alfred” → Force Quit</li>
+<li>重新打开 Alfred</li>
+</ul>
+</li>
+<li><p><strong>检查 workflow 是否禁用：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>disabled<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">false</span>/&gt;</span>  <span class="comment">&lt;!-- false = 启用 --&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>检查 bundleid 冲突：</strong></p>
+<ul>
+<li>不同 workflow 不能有相同 bundleid</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="9-发布与分发"><a href="#9-发布与分发" class="headerlink" title="9. 发布与分发"></a>9. 发布与分发</h2><h3 id="9-1-打包为-alfredworkflow"><a href="#9-1-打包为-alfredworkflow" class="headerlink" title="9.1 打包为 .alfredworkflow"></a>9.1 打包为 .alfredworkflow</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> alfred-workflow/</span><br><span class="line">zip -r ../FY-Translator.alfredworkflow . -x <span class="string">&quot;*.pyc&quot;</span> <span class="string">&quot;__pycache__/*&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 双击安装：Alfred 会自动导入</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-手动安装路径"><a href="#9-2-手动安装路径" class="headerlink" title="9.2 手动安装路径"></a>9.2 手动安装路径</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Alfred 4+ (macOS)</span></span><br><span class="line">~/Library/Application Support/Alfred/Alfred.alfredpreferences/workflows/user.workflow.&lt;UUID&gt;/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装步骤</span></span><br><span class="line"><span class="built_in">cp</span> translate.py alfred.py info.plist \</span><br><span class="line">   ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/user.workflow.&lt;UUID&gt;/</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-3-Workflow-目录结构"><a href="#9-3-Workflow-目录结构" class="headerlink" title="9.3 Workflow 目录结构"></a>9.3 Workflow 目录结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">alfred-workflow/</span><br><span class="line">├── info.plist          # Workflow 配置（必需）</span><br><span class="line">├── translate.py        # Script Filter 脚本（必需）</span><br><span class="line">├── alfred.py           # Alfred 辅助库</span><br><span class="line">├── config.json         # API 配置（可选）</span><br><span class="line">├── icon.png            # Workflow 图标（可选）</span><br><span class="line">└── __pycache__/        # Python 缓存（排除在 zip 外）</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-4-版本管理"><a href="#9-4-版本管理" class="headerlink" title="9.4 版本管理"></a>9.4 版本管理</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>version<span class="tag">&lt;/<span class="name">key</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>2.0<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 语义化版本：主版本.次版本.修订号 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="附录-A-完整项目结构"><a href="#附录-A-完整项目结构" class="headerlink" title="附录 A: 完整项目结构"></a>附录 A: 完整项目结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">local-translator/</span><br><span class="line">├── app.py                      # FastAPI 翻译服务（中间件模式）</span><br><span class="line">├── translate.py                # oMLX 直连翻译脚本（独立使用）</span><br><span class="line">├── config.json                 # API 配置</span><br><span class="line">├── pyproject.toml              # Python 项目配置</span><br><span class="line">├── alfred-workflow/</span><br><span class="line">│   ├── info.plist              # Alfred Workflow 配置</span><br><span class="line">│   ├── translate.py            # Script Filter 脚本</span><br><span class="line">│   ├── alfred.py               # Alfred Python 辅助库</span><br><span class="line">│   └── action.py               # (可选) Action 脚本</span><br><span class="line">├── tests/</span><br><span class="line">│   ├── test_workflow_omlx_direct.py    # 翻译逻辑测试（14个）</span><br><span class="line">│   ├── test_alfred_script_filter.py    # Script Filter 模式测试（12个）</span><br><span class="line">│   └── test_alfred_xml.py              # alfred.py XML 输出测试</span><br><span class="line">├── FY-Translator.alfredworkflow        # 打包分发文件</span><br><span class="line">└── README.md</span><br></pre></td></tr></table></figure>
+
+<h2 id="附录-B-关键配置文件速查"><a href="#附录-B-关键配置文件速查" class="headerlink" title="附录 B: 关键配置文件速查"></a>附录 B: 关键配置文件速查</h2><h3 id="config-json（API-配置）"><a href="#config-json（API-配置）" class="headerlink" title="config.json（API 配置）"></a>config.json（API 配置）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;omlx&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;localhost&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8050</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;translategemma-4b-it-4bit&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="pyproject-toml（项目配置）"><a href="#pyproject-toml（项目配置）" class="headerlink" title="pyproject.toml（项目配置）"></a>pyproject.toml（项目配置）</h3><figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tool.pytest.ini_options]</span></span><br><span class="line"><span class="attr">testpaths</span> = [<span class="string">&quot;tests&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="section">[project]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;local-translator&quot;</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">&quot;2.0&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="附录-C-调试命令速查"><a href="#附录-C-调试命令速查" class="headerlink" title="附录 C: 调试命令速查"></a>附录 C: 调试命令速查</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>测试脚本输出</td>
+<td><code>python3 translate.py &quot;Hello world&quot;</code></td>
+</tr>
+<tr>
+<td>验证 XML 格式</td>
+<td><code>python3 translate.py &quot;x&quot; | python3 -c &quot;import sys,xml.etree.ElementTree as ET; print(ET.fromstring(sys.stdin.read()).tag)&quot;</code></td>
+</tr>
+<tr>
+<td>检查 oMLX 健康</td>
+<td><code>curl http://localhost:8050/health</code></td>
+</tr>
+<tr>
+<td>检查 API 健康</td>
+<td><code>curl http://localhost:8780/api/health</code></td>
+</tr>
+<tr>
+<td>直接测试 oMLX API</td>
+<td><code>curl -s -X POST http://localhost:8050/v1/completions -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;model&quot;:&quot;...&quot;,&quot;prompt&quot;:&quot;...&quot;}&#39;</code></td>
+</tr>
+<tr>
+<td>查看所有 workflow</td>
+<td><code>ls ~/Library/Application\ Support/Alfred/Alfred.alfredpreferences/workflows/user.workflow.*</code></td>
+</tr>
+<tr>
+<td>运行全部测试</td>
+<td><code>uv run pytest tests/ -q</code></td>
+</tr>
+<tr>
+<td>启动翻译服务</td>
+<td><code>cd local-translator &amp;&amp; uv run uvicorn app:app --host 0.0.0.0 --port 8780</code></td>
+</tr>
+</tbody></table>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/claude-code-source/">Claude-Code</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Alfred-Workflow-%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">1. Alfred Workflow 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">2.1.</span> <span class="toc-text">数据流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E8%BE%93%E5%85%A5%E7%B1%BB%E5%9E%8B%E5%AF%B9%E6%AF%94"><span class="toc-number">2.2.</span> <span class="toc-text">两种输入类型对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8-Keyword-Action%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">为什么不用 Keyword + Action？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">2. 核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Keyword%EF%BC%88%E5%85%B3%E9%94%AE%E8%AF%8D%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 Keyword（关键词）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Script-Filter-vs-Keyword"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 Script Filter vs Keyword</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-XML-%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 XML 输出格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-info-plist-%E8%AF%A6%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">3. info.plist 详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%8C%E6%95%B4%E6%A8%A1%E6%9D%BF%EF%BC%88Script-Filter-Clipboard-Output%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 完整模板（Script Filter + Clipboard Output）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-escaping-%E8%BD%AC%E4%B9%89%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 escaping 转义模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Alfred-Workflow-Editor%EF%BC%88%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%96%E8%BE%91%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 Alfred Workflow Editor（可视化编辑）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Python-%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91"><span class="toc-number">5.</span> <span class="toc-text">4. Python 脚本开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%85%A5%E5%8F%A3%E7%82%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 入口点模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Alfred-%E8%B0%83%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 Alfred 调用方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Python-3-%E5%85%BC%E5%AE%B9%E6%80%A7%EF%BC%88alfred-py%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 Python 3 兼容性（alfred.py）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-alfred-py-Item-%E7%B1%BB%E4%BD%BF%E7%94%A8"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 alfred.py Item 类使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E5%A4%9A%E7%BB%93%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 多结果展示</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-alfred-py-%E8%BE%85%E5%8A%A9%E5%BA%93"><span class="toc-number">6.</span> <span class="toc-text">5. alfred.py 辅助库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%A0%B8%E5%BF%83-API"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 核心 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Item-attributes-%E5%B8%B8%E7%94%A8%E5%AD%97%E6%AE%B5"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 Item.attributes 常用字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-uid-%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 uid() 生成规则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-TDD-%E6%B5%8B%E8%AF%95%E7%AD%96%E7%95%A5"><span class="toc-number">7.</span> <span class="toc-text">6. TDD 测试策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%B5%8B%E8%AF%95%EF%BC%9F"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 为什么需要测试？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%B5%8B%E8%AF%95%E6%9E%B6%E6%9E%84"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 测试架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E6%A8%A1%E5%9D%97%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%BC%8F"><span class="toc-number">7.3.</span> <span class="toc-text">6.3 模块加载模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-TDD-%E7%BA%A2%E7%BB%BF%E9%87%8D%E6%9E%84%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.4.</span> <span class="toc-text">6.4 TDD 红绿重构循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-Mock-API-%E8%B0%83%E7%94%A8"><span class="toc-number">7.5.</span> <span class="toc-text">6.5 Mock API 调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-Mock-stdout-%E8%BE%93%E5%87%BA"><span class="toc-number">7.6.</span> <span class="toc-text">6.6 Mock stdout 输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">7.7.</span> <span class="toc-text">6.7 测试运行命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">7. 调试方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8C%EF%BC%88%E6%9C%80%E5%BF%AB%EF%BC%89"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 命令行直接运行（最快）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Alfred-%E5%86%85%E7%BD%AE%E8%B0%83%E8%AF%95"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 Alfred 内置调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Python-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 Python 断点调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-XML-%E8%BE%93%E5%87%BA%E9%AA%8C%E8%AF%81"><span class="toc-number">8.4.</span> <span class="toc-text">7.4 XML 输出验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-5-%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%B0%83%E8%AF%95"><span class="toc-number">8.5.</span> <span class="toc-text">7.5 网络请求调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-6-Alfred-Workflow-Editor-%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">8.6.</span> <span class="toc-text">7.6 Alfred Workflow Editor 调试技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E9%99%B7%E9%98%B1"><span class="toc-number">9.</span> <span class="toc-text">8. 常见问题与陷阱</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-XML-%E8%BE%93%E5%87%BA%E9%97%AE%E9%A2%98"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 XML 输出问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-Python-3-%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 Python 3 兼容性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E4%B8%AD%E6%96%87%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 中文编码问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-Script-Filter-%E4%B8%8D%E8%A7%A6%E5%8F%91"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 Script Filter 不触发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-Clipboard-Output-%E4%B8%8D%E5%B7%A5%E4%BD%9C"><span class="toc-number">9.5.</span> <span class="toc-text">8.5 Clipboard Output 不工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-6-%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86"><span class="toc-number">9.6.</span> <span class="toc-text">8.6 特殊字符处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-7-API-%E8%B0%83%E7%94%A8%E5%A4%B1%E8%B4%A5%EF%BC%88422-Connection-Error%EF%BC%89"><span class="toc-number">9.7.</span> <span class="toc-text">8.7 API 调用失败（422 &#x2F; Connection Error）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-8-Workflow-%E5%AE%89%E8%A3%85%E5%90%8E%E4%B8%8D%E7%94%9F%E6%95%88"><span class="toc-number">9.8.</span> <span class="toc-text">8.8 Workflow 安装后不生效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%8F%91%E5%B8%83%E4%B8%8E%E5%88%86%E5%8F%91"><span class="toc-number">10.</span> <span class="toc-text">9. 发布与分发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E6%89%93%E5%8C%85%E4%B8%BA-alfredworkflow"><span class="toc-number">10.1.</span> <span class="toc-text">9.1 打包为 .alfredworkflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84"><span class="toc-number">10.2.</span> <span class="toc-text">9.2 手动安装路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-Workflow-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">10.3.</span> <span class="toc-text">9.3 Workflow 目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="toc-number">10.4.</span> <span class="toc-text">9.4 版本管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-A-%E5%AE%8C%E6%95%B4%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">附录 A: 完整项目结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-B-%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%80%9F%E6%9F%A5"><span class="toc-number">12.</span> <span class="toc-text">附录 B: 关键配置文件速查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#config-json%EF%BC%88API-%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">12.1.</span> <span class="toc-text">config.json（API 配置）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pyproject-toml%EF%BC%88%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">12.2.</span> <span class="toc-text">pyproject.toml（项目配置）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95-C-%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="toc-number">13.</span> <span class="toc-text">附录 C: 调试命令速查</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&text=Alfred Workflow 开发、调试指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&is_video=false&description=Alfred Workflow 开发、调试指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Alfred Workflow 开发、调试指南&body=Check out this article: https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&title=Alfred Workflow 开发、调试指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&name=Alfred Workflow 开发、调试指南&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://yuanxujia8090.github.io/2026/05/24/alfred-workflow/&t=Alfred Workflow 开发、调试指南"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2026
+    袁旭佳(Aaron)
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/claude-code-source/">Claude-Code</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
